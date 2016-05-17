@@ -43,7 +43,7 @@
 
 \pagebreak
 
-\section{Techniki uwzględniania ograniczeń} \label{odwolania}
+\section{Techniki uwzględniania ograniczeń}
 Niektóre problemy optymalizacyjne posiadają ograniczenia. Szukając rozwiązania należy zapewnić, że rozwiązanie będzie dopuszczalne. Zgodnie z --------łącze-------- techniki, które w tym pomagają można podzielić w następujący sposób:
 \begin{itemize}[noitemsep]
 \item definicja przestrzeni przeszukiwań - zapewnienie, że podczas krzyżowań, mutacji i innych zmian punktów, żaden z punktów nie wypadnie poza przestrzeń przeszukiwań,
@@ -53,8 +53,15 @@ Niektóre problemy optymalizacyjne posiadają ograniczenia. Szukając rozwiązan
 
 W tej pracy skupiono się na transformacji rozwiązań
 
-\subsection{Transformacje rozwiązań}
-Nie istnieje jedna technika transformacji rozwiązań spoza ograniczeń, na dopuszczalne. W kolejnych podrozdziałach opisane są metody transformacji rozwiązań, które były badane. Każda z technik jest opisana słownie oraz pseudokodem. Opis słowny zawiera wyjaśnienie, co się dzieje z punktem, który znalazł się poza ograniczeniem. W pseudokodzie $x$ jest punktem, który poddajemy naprawie.
+\subsection{Transformacje rozwiązań} \label{transformacje}
+Nie istnieje jedna technika transformacji rozwiązań spoza ograniczeń, na dopuszczalne. W kolejnych podrozdziałach opisane są metody transformacji rozwiązań, które były badane. Każda z technik jest opisana słownie oraz pseudokodem. Opis słowny zawiera wyjaśnienie, co się dzieje z punktem, który znalazł się poza ograniczeniem. W pseudokodzie zastosowane następujące oznaczenia:
+\begin{itemize}[noitemsep]
+\item $x$ - punkt, który poddajemy naprawie
+\item $x'$ - ojciec punktu $x$, czyli z punktu $x'$ z zadanym rozkładem został wylosowany punkt $x$
+\item $x(i)$ - wartość $i$-tej współrzędnej punktu $x$
+\item $lb$ - ograniczenie dolne
+\item $ub$ - ograniczenie górne
+\end{itemize}
 
 \subsubsection{Powrót?}
 Nowy punkt zostaje odrzucony i wraca do poprzedniej pozycji.
@@ -113,17 +120,17 @@ Dla każdej współrzędnej sprawdzane są warunki na ograniczenie. W przapadku 
 			x(i) = lb(i) + (x(i) - ub(i))
 \end{Verbatim}
 
-\subsection{Błądzenie przypadkowe}
+\subsection{Błądzenie przypadkowe} \label{bladzenie}
 
-Można się spodziewać, że algorytm CMA-ES dla funkcji stałej będzie zachowywał się analogicznie do błądzenia przypadkowego. Takie założenie skłoniło autorów, żeby przyjrzeć się błądzeniu przypadkowemu z ograniczeniami. Błądzenie przypadkowe jest algorytmem dużo prostrzym, niż CMA-ES, więc umożliwia  większe możliwości testowania i wyciągania wniosków.\\
+Można się spodziewać, że algorytm CMA-ES dla funkcji stałej będzie zachowywał się analogicznie do błądzenia przypadkowego. Takie założenie skłoniło autorów, żeby przyjrzeć się błądzeniu przypadkowemu z ograniczeniami. Błądzenie przypadkowe jest algorytmem dużo prostrzym, niż CMA-ES, więc umożliwia szybsze testowanie i wyciąganie wniosków.\\
 Niech $ X_1, X_2, ... $ będą niezależnymi n-wymiarowymi zmiennymi losowymi o wartości oczekiwanej równej $ \{0\}^n $. Błądzeniem przypadkowym nazywamy sekwencję zmiennych losowych:
 \begin{equation}
 S_0 = 0, S_i=X_1+X_2+...+X_i
 \end{equation}
 
 \subsection{Metoda przeprowadzania testów}
-W celu przeprowadzenia testów napisano szereg skryptów w języku MATLAB. Testy te obserwowały wpływ metod uwzględniania ograniczeń na ruch punktu. W rezultacie miały one pokazać rozkład prawdopodobieństwa punktu dla danej metody. Metody wybrane do testowania są takie jak w podrozdziale ----link----
-Ponadto badano 2 różne metody losowania punktów: rozkład normalny oraz jednostajny. W przypadku rozkładu jednostajnego losowano z przedziału znacząco mniejszego od ograniczeń kostkowych.
+W celu przeprowadzenia testów napisano szereg skryptów w języku MATLAB. Testy te obserwowały wpływ metod uwzględniania ograniczeń na ruch punktu. W rezultacie miały one pokazać rozkład prawdopodobieństwa punktu dla danej metody. Metody wybrane do testowania są takie jak w podrozdziale \ref{transformacje}.
+Ponadto badano 2 różne metody losowania punktów: rozkład normalny oraz jednostajny. W przypadku rozkładu jednostajnego losowano liczby z przedziału $[-0.5; 0.5]$ (przedział zazwyczaj kilkukrotnie krótszy od ograniczeń kostkowych).
 
 \subsubsection{Skrypty}
 Skrypty zostały zbudowane zgodnie z poniższym pseudokodem.
@@ -142,12 +149,24 @@ Skrypty zostały zbudowane zgodnie z poniższym pseudokodem.
 
 \subsection{Wyniki testów}
 
+\subsubsection{Powrót?}
+
+\subsubsection{Rzutowanie}
+
+\subsubsection{Reinicjalizacja}
+
+\subsubsection{Odbicie}
+
+\subsubsection{Próbkowanie}
+
+\subsubsection{Zawijanie}
+
 \subsection{Wnioski}
 
 \pagebreak
 
-\section{Testowanie algorytmu CMA-ES}
-Zgodnie z założeniami poczynionymi w rozdziale \ref{odwolania} testy algorytmu CMA-ES miały przynieść rezultaty zbliżone do testów błądzenia przypadkowego.
+\section{Benchmarki}
+Zgodnie z założeniami poczynionymi w rozdziale \ref{bladzenie} testy algorytmu CMA-ES powinny przynieść rezultaty zbliżone do testów błądzenia przypadkowego.
 
 \subsection{Metoda przeprowadzania testów}
 Do przeprowadzania testów została użyta biblioteka przygotowana przez Nikolausa Hansena, współautora algorytmu CMA-ES. Podobnie, jak w przypadku błądzenia przypadkowego, wykorzystano implementację w języku MATLAB ---przypis---.
@@ -158,9 +177,11 @@ Do przeprowadzania testów została użyta biblioteka przygotowana przez Nikolau
 
 \section{Wpływ technik na efektywność CMA-ES}
 
-\subsection{Idea}
+\subsection{Algorytm CMA-ES}
+Klasyczne algorytmy ewolucyjne nie dostosowują się do charakterystyki optymalizowanej funkcji. W większości z nich rozkład prawdopodobieństwa losowanych punktów jest stały. Z tego faktu wynika problem dobrania parametrów przeszukiwania. Na przeciw tym problemom wychodzi algorytm CMA-ES, który w swej idei ma dopasowywać się do badanej funkcji.\\
+Rozwinięcie akronimu CME-ES podpowiada, w jaki sposób jest to realizowane: Covariance Matrix Adaptation - Evolution Strategy (adaptacja macierzy kowariancji - strategia ewolucyjna). Punkty losowane są na podstawie macierzy kowariancji, która jest w każdej iteracji dostosowywana do aktualnej sytuacji przeszukiwań.
 
-\subsection{Szczegóły}
+\subsubsection{Szczegóły}
 
 \pagebreak
 
