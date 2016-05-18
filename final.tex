@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{fancyvrb}
 \usepackage{amsmath}
+\usepackage{subfig}
 \newcommand{\degree}{\ensuremath{^\circ}}
 \newcommand{\hilight}[1]{\colorbox{yellow}{#1}}
 \linespread{1.5}
@@ -149,9 +150,11 @@ Skrypty zostały zbudowane zgodnie z poniższym pseudokodem.
 \end{Verbatim}
 
 \subsection{Wyniki testów}
-Wykresy zamieszczone w tym rozdziale są histogramami wystąpień punktu. Symulacje skryptów były uruchamiane z liczbą iteracji wynosząco od 1 miliona do 100 milionów. Szerokość przedziałów jest różna i była dobierana tak, aby jak najlepiej przedstawić interesujące fakty. 
+Wykresy zamieszczone w tym rozdziale są histogramami wystąpień punktu. Symulacje skryptów były uruchamiane z liczbą iteracji wynoszącą 2-100 milionów. Szerokość przedziałów jest różna i była dobierana tak, aby jak najlepiej przedstawić interesujące fakty.\\
+Wszystkie wykresy, które pokazdują wyniki błądzenia przypadkowego w dwóch wymiarach zostały przetworzone w następujący sposób: otrzymane wyniki symulacji powielono poprzez symetrzyczne odbicie ich względem osi X, osi Y oraz początku układu współrzędnych. Wykonano ten zabieg, aby zwiększyć dokładność wyników. Nie wpływają one na badania, poniważ punkty 0 są środkami ograniczeń obu osi, a z perspektywy algorytmu nie ma znaczenia, w której ćwiartce znajduje się aktualnie punkt.
 
 \subsubsection*{Powrót?}
+Histogramy pokazują, że punkt z większym prawdopodobieństwiem występuje przy ograniczeniach. Takie zachowanie można uznać za intuicyjne, ponieważ potomkowie punktów blisko granicy mogą "wypaść" poza ograniczenie. Po naprawie dziecko będzie tym samym punktem.
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{c_n_20M_1__5_5_2}
@@ -171,27 +174,32 @@ Wykresy zamieszczone w tym rozdziale są histogramami wystąpień punktu. Symula
 \end{figure}
 
 \subsubsection*{Rzutowanie}
-dsafdsafasf dsafdsa f asdf dsf asd fasd fasd fsadf dsafasd fasd ds fasd fsa fsad fads fads fasd fdas fdsa fad af adsf af asdfa
+Zgodnie z przewidywaniami największe prawdopodobieństwo wystąpienia punktu jest na ograniczeniu, co bardzo dobrze obrazuje rysunek \ref{bladzenie:rzutowanie2d}. Na rysunkach   \ref{bladzenie:rzutowanie1dn} i  \ref{bladzenie:rzutowanie1dj} zakres osi~Y został zmniejszony do odpowiednio $[30000;60000]$ i $[70000;140000]$, aby uwypuklić interesujące efekty. W związku z tym zostały "ucięte" wartości na przedziałach brzegowych. Warto zwrócić uwagę na bardzo niespodziewane zjawisko - wartości histogramów blisko ograniczeń są zdecydowanie mniejsze, niż pozostałe. Oznacza to, że punkty w tych przedziałach występują z mniejszym prawdopodobieństwem, niż pozostałe. Wydawać by się mogło, że powinno być inaczej, ponieważ podczas symulacji punkty często są rzutowane na ograniczenie. Dodatkowo w rozkładzie jednostajnym widać, że istnieją przedziały, w których punkty występują z większym prawdopodobieństwem. Autorom nie udało się formalnie uzasadnić tego zjawiska. Intuicja prowadzi do hipotezy, że punkty, które teoretycznie wypadły bez naprawy zapełniłyby utworzony "dołek", natomiast naprawa sprawia, że cała dalsza symulacja niejako zostaje przesunięta. W ten sposób powstaje "górka" w rozkładzie jednostajnym. Z charakterystyki rozkładu normalnego może brać się fakt, iż owa górka nie występuje w tymże.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{p_n_10M_2__20_20__10_10_4_2}
 \caption{Rozkład normalny na dwóch wymiarach z kopiowaniem symetrycznym}
+\label{bladzenie:rzutowanie2d}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{p_n_50M_1__5_5}
 \caption{Rozkład normalny}
+\label{bladzenie:rzutowanie1dn}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{p_j_100M_1__3_3}
 \caption{Rozkład jednostajny}
+\label{bladzenie:rzutowanie1dj}
 \end{figure}
 
 \subsubsection*{Reinicjalizacja}
+Na pierwszy rzut oka wykresy nie ukazują nic nadzwyczajnego, ponieważ łatwo zauważyć pik związany z reinicjalizacją oraz wartości histogramu malejące wraz ze zbliżaniem się do ograniczeń. Autorzy pragną zwrócić uwagę na 2 fakty. Pierwszy, to kształt histogramu. Zarówno dla rozkładu jednostajnego i normalnego w jednym wymiarze jest on stożkowy. Łuk widać tylko blisko punktu środkowego, w pozostałej części spadek jest liniowy. Brakuje charakterystycznego, gaussowskiego przegięcia. Sytuacja jest ciekawsza, gdy występuje więcej wymiarów. Widać wówczas przegięcie. Dokładniejsze badania pokazały, że przegięcie nie występuje tylko na jednym wymiarze. Tym, który jest relatywnie najkrótszy. Celowo jest użyte słowo relatywnie, ponieważ z perspektywy błądzenia przypadkolwego i rozkładu normalnego trzeba brać pod uwagę parametr $\sigma$. Wymiary o małym $\sigma$ będą relatywnie dłuższe od tych z dużym $\sigma$, ponieważ błądzenie będzie wykonywało mniejsze kroki.\\
+Na rysunku \ref{bladzenie:probkowanie1dj} można dostrzec też dwa uskoki, które związane są z pikiem w punkcie~$0$ oraz charakterystyką rozkładu.
 
 \begin{figure}[H]
 \centering
@@ -217,21 +225,8 @@ dsafdsafasf dsafdsa f asdf dsf asd fasd fasd fsadf dsafasd fasd ds fasd fsa fsad
 \caption{Rozkład jednostajny}
 \end{figure}
 
-\subsubsection*{Odbicie}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{rf_n_10M_2__20_20__10_10_4_2}
-\caption{Rozkład normalny na dwóch wymiarach z kopiowaniem symetrycznym}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{rf_j_100M_1__3_3}
-\caption{Rozkład jednostajny}
-\end{figure}
-
 \subsubsection*{Próbkowanie}
+Ten rozkład charakteryzuje się spadkiem wartości prawdopodobieństwa wraz z zbliżaniem się do ograniczenia. Punky, które wypadłyby poza ograniczenia oraz ich potomkowie są przesuwane w kierunku środka przedziału.
 
 \begin{figure}[H]
 \centering
@@ -249,10 +244,11 @@ dsafdsafasf dsafdsa f asdf dsf asd fasd fasd fsadf dsafasd fasd ds fasd fsa fsad
 \centering
 \includegraphics[width=\textwidth]{s_j_20M_1__3_3}
 \caption{Rozkład jednostajny}
+\label{bladzenie:probkowanie1dj}
 \end{figure}
 
 \subsubsection*{Zawijanie}
-
+Wyobraźmy sobie, że naszą symulację przeprowadzamy bez ograniczeń, następnie naszą tniemy w równych odstępach wzdłuż każdej osi. Na koniec tak pocięte wyniki łączymy w jednym wykresie. Takie zachowanie tak naprawdę symuluje zawijanie. W związku z tym nie dziwi fakt, że poniższe histogramy przedstawkają rozkład jednostajny z szumem.
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{w_n_10M_2__20_20__10_10_4_2}
@@ -263,6 +259,28 @@ dsafdsafasf dsafdsa f asdf dsf asd fasd fasd fsadf dsafasd fasd ds fasd fsa fsad
 \centering
 \includegraphics[width=\textwidth]{w_j_20M_1__3_3}
 \caption{Rozkład jednostajny}
+\end{figure}
+
+\subsubsection*{Odbicie}
+Podobnie jak zawijanie, odbicie zwraca histogram rozkładu normalnego z szumem. W tej sytuacji nieco trudniej o analogię, lecz po chwili zastanowienia nie dziwi kształt poniższych wykresów.
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{rf_n_10M_2__20_20__10_10_4_2}
+\caption{Rozkład normalny na dwóch wymiarach z kopiowaniem symetrycznym}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{rf_j_100M_1__3_3}
+\caption{Rozkład jednostajny}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\subfloat[test 1]{\includegraphics[width=0.45\textwidth]{ri_n_10M_2__20_20__10_10_4_1D}}
+\quad
+\subfloat[test 2]{\includegraphics[width=0.45\textwidth]{p_j_100M_1__3_3}}
+\caption{TEST Obrazy obok siebie}
 \end{figure}
 
 \subsection{Wnioski}
