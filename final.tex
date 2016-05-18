@@ -132,6 +132,7 @@ S_0 = 0, S_i=X_1+X_2+...+X_i
 W celu przeprowadzenia testów napisano szereg skryptów w języku MATLAB. Testy te obserwowały wpływ metod uwzględniania ograniczeń na ruch punktu. W rezultacie miały one pokazać rozkład prawdopodobieństwa punktu dla danej metody. Metody wybrane do testowania są takie jak w podrozdziale \ref{transformacje}.
 Ponadto badano 2 różne metody losowania punktów: rozkład normalny oraz jednostajny. W przypadku rozkładu jednostajnego losowano liczby z przedziału $[-0.5; 0.5]$ (przedział zazwyczaj kilkukrotnie krótszy od ograniczeń kostkowych).
 
+
 \subsubsection*{Skrypty}
 Skrypty zostały zbudowane zgodnie z poniższym pseudokodem.
 \begin{Verbatim}[baselinestretch=1.1]
@@ -148,24 +149,121 @@ Skrypty zostały zbudowane zgodnie z poniższym pseudokodem.
 \end{Verbatim}
 
 \subsection{Wyniki testów}
+Wykresy zamieszczone w tym rozdziale są histogramami wystąpień punktu. Symulacje skryptów były uruchamiane z liczbą iteracji wynosząco od 1 miliona do 100 milionów. Szerokość przedziałów jest różna i była dobierana tak, aby jak najlepiej przedstawić interesujące fakty. 
 
 \subsubsection*{Powrót?}
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.3]{algorytm}
-\caption{Dwa kroki algorytmu wykonane dla pojedynczej komórki początkowej}
-\label{fig:algorytm}
+\includegraphics[width=\textwidth]{c_n_20M_1__5_5_2}
+\caption{Rozkład normalny}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{c_j_2M_1__5_5}
+\caption{Rozkład jednostajny}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{c_n_10M_2__20_20__10_10_4}
+\caption{Rozkład normalny na dwóch wymiarach z kopiowaniem symetrycznym}
 \end{figure}
 
 \subsubsection*{Rzutowanie}
+dsafdsafasf dsafdsa f asdf dsf asd fasd fasd fsadf dsafasd fasd ds fasd fsa fsad fads fads fasd fdas fdsa fad af adsf af asdfa
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{p_n_10M_2__20_20__10_10_4_2}
+\caption{Rozkład normalny na dwóch wymiarach z kopiowaniem symetrycznym}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{p_n_50M_1__5_5}
+\caption{Rozkład normalny}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{p_j_100M_1__3_3}
+\caption{Rozkład jednostajny}
+\end{figure}
 
 \subsubsection*{Reinicjalizacja}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{ri_n_10M_2__20_20__10_10_4}
+\caption{Rozkład normalny na dwóch wymiarach z kopiowaniem symetrycznym}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{ri_n_10M_2__20_20__10_10_4_1D}
+\caption{Rozkład normalny na dwóch wymiarach z kopiowaniem symetrycznym; oddzielne histogramy dla obu wymiarów}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{ri_n_20M_1__5_5}
+\caption{Rozkład normalny}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{ri_j_20M_1__3_3}
+\caption{Rozkład jednostajny}
+\end{figure}
+
 \subsubsection*{Odbicie}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{rf_n_10M_2__20_20__10_10_4_2}
+\caption{Rozkład normalny na dwóch wymiarach z kopiowaniem symetrycznym}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{rf_j_100M_1__3_3}
+\caption{Rozkład jednostajny}
+\end{figure}
 
 \subsubsection*{Próbkowanie}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{s_n_10M_2__20_20__10_10_4_2}
+\caption{Rozkład normalny na dwóch wymiarach z kopiowaniem symetrycznym}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{s_n_10M_1__5_5}
+\caption{Rozkład normalny}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{s_j_20M_1__3_3}
+\caption{Rozkład jednostajny}
+\end{figure}
+
 \subsubsection*{Zawijanie}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{w_n_10M_2__20_20__10_10_4_2}
+\caption{Rozkład normalny na dwóch wymiarach z kopiowaniem symetrycznym}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{w_j_20M_1__3_3}
+\caption{Rozkład jednostajny}
+\end{figure}
 
 \subsection{Wnioski}
 
