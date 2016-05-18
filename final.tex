@@ -132,7 +132,7 @@ S_0 = 0, S_i=X_1+X_2+...+X_i
 W celu przeprowadzenia testów napisano szereg skryptów w języku MATLAB. Testy te obserwowały wpływ metod uwzględniania ograniczeń na ruch punktu. W rezultacie miały one pokazać rozkład prawdopodobieństwa punktu dla danej metody. Metody wybrane do testowania są takie jak w podrozdziale \ref{transformacje}.
 Ponadto badano 2 różne metody losowania punktów: rozkład normalny oraz jednostajny. W przypadku rozkładu jednostajnego losowano liczby z przedziału $[-0.5; 0.5]$ (przedział zazwyczaj kilkukrotnie krótszy od ograniczeń kostkowych).
 
-\subsubsection{Skrypty}
+\subsubsection*{Skrypty}
 Skrypty zostały zbudowane zgodnie z poniższym pseudokodem.
 \begin{Verbatim}[baselinestretch=1.1]
 	x - błądzący punkt
@@ -149,17 +149,23 @@ Skrypty zostały zbudowane zgodnie z poniższym pseudokodem.
 
 \subsection{Wyniki testów}
 
-\subsubsection{Powrót?}
+\subsubsection*{Powrót?}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.3]{algorytm}
+\caption{Dwa kroki algorytmu wykonane dla pojedynczej komórki początkowej}
+\label{fig:algorytm}
+\end{figure}
 
-\subsubsection{Rzutowanie}
+\subsubsection*{Rzutowanie}
 
-\subsubsection{Reinicjalizacja}
+\subsubsection*{Reinicjalizacja}
 
-\subsubsection{Odbicie}
+\subsubsection*{Odbicie}
 
-\subsubsection{Próbkowanie}
+\subsubsection*{Próbkowanie}
 
-\subsubsection{Zawijanie}
+\subsubsection*{Zawijanie}
 
 \subsection{Wnioski}
 
@@ -181,7 +187,7 @@ Do przeprowadzania testów została użyta biblioteka przygotowana przez Nikolau
 Klasyczne algorytmy ewolucyjne nie dostosowują się do charakterystyki optymalizowanej funkcji. W większości z nich rozkład prawdopodobieństwa losowanych punktów jest stały. Z tego faktu wynika problem dobrania parametrów przeszukiwania. Na przeciw tym problemom wychodzi algorytm CMA-ES, który w swej idei ma dopasowywać się do badanej funkcji.\\
 Rozwinięcie akronimu CME-ES podpowiada, w jaki sposób jest to realizowane: Covariance Matrix Adaptation - Evolution Strategy (adaptacja macierzy kowariancji - strategia ewolucyjna). Punkty losowane są na podstawie macierzy kowariancji, która jest w każdej iteracji dostosowywana do aktualnej sytuacji przeszukiwań.
 
-\subsubsection{Szczegóły}
+\subsubsection*{Szczegóły}
 
 \pagebreak
 
