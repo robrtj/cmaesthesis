@@ -26,7 +26,7 @@
 \thispagestyle{empty}
 
 \openup -0.2em %make it fit on one page
-\tableofcontents 
+\tableofcontents
 \openup 0.2em %make it fit on one page
 
 \thispagestyle{empty}
@@ -55,16 +55,16 @@ Niektóre problemy optymalizacyjne posiadają ograniczenia. Szukając rozwiązan
 W tej pracy skupiono się na transformacji rozwiązań.
 
 \subsection{Transformacje rozwiązań} \label{transformacje}
-Nie istnieje jedna technika transformacji rozwiązań spoza ograniczeń na dopuszczalne. W kolejnych podrozdziałach znajdują się metody transformacji rozwiązań, które były badane. Każda z technik jest opisana słownie oraz pseudokodem. Opis słowny zawiera wyjaśnienie, co się dzieje z punktem, który znalazł się poza ograniczeniem. W~pseudokodzie zastosowane następujące oznaczenia:
+Nie istnieje jedna technika transformacji rozwiązań spoza ograniczeń na dopuszczalne. W kolejnych podrozdziałach znajdują się metody transformacji rozwiązań, które były badane. Każda z technik jest opisana słownie oraz pseudokodem. Opis słowny zawiera wyjaśnienie, co się dzieje z punktem, który znalazł się poza ograniczeniem. W~pseudokodzie zastosowano następujące oznaczenia:
 \begin{itemize}[noitemsep]
 \item $x$ - punkt, który poddajemy naprawie
-\item $x'$ - rodzic punktu $x$, czyli z punktu $x'$ z zadanym rozkładem został wylosowany punkt $x$
+\item $x'$ - rodzic punktu $x$, czyli z punktu $x'$ z zadanym rozkładem został wygenerowany punkt $x$
 \item $x(i)$ - wartość $i$-tej współrzędnej punktu $x$
 \item $lb$ - ograniczenie dolne
 \item $ub$ - ograniczenie górne
 \end{itemize}
 
-\subsubsection{Powrót?}
+\subsubsection{Metoda klasyczna}
 Nowy punkt zostaje odrzucony i wraca do poprzedniej pozycji.
 
 \begin{Verbatim}[baselinestretch=1.1]
@@ -83,7 +83,7 @@ Punkt jest transformowany do najbliższego punktu, który spełnia ograniczenie.
 			x(i) = ub(i)
 \end{Verbatim}
 
-\subsubsection{Reinicjalizacja}
+\subsubsection{Reinicjacja}
 Punkt jest przenoszony do pozycji początkowej. W tej pracy był to jednocześnie środek układu współrzędnych oraz środek symetrii ograniczeń.
 
 \begin{Verbatim}[baselinestretch=1.1]
@@ -103,7 +103,7 @@ Dla każdej współrzędnej sprawdzane są warunki na ograniczenie. W przapadku 
 \end{Verbatim}
 
 \subsubsection{Próbkowanie}
-Punkt jest powtórnie losowany dopóty, dopóki spełnia ograniczenia kostkowe.
+Punkt jest powtórnie generowany do momentu, aż spełni ograniczenie kostkowe.
 
 \begin{Verbatim}[baselinestretch=1.1]
 	dopóki !w_ograniczeniach(x)
@@ -111,7 +111,7 @@ Punkt jest powtórnie losowany dopóty, dopóki spełnia ograniczenia kostkowe.
 \end{Verbatim}
 
 \subsubsection{Zawijanie}
-Dla każdej współrzędnej sprawdzane są warunki na ograniczenie. W przapadku współrzędnych, na których punkt jest poza ograniczeniem, różnica, pomiędzy ograniczeniem a wartością współrzędnej punktu, jest zapamiętywana. Tę różnicę odkładamy na przeciwległym ograniczeniu po stronie, która jest wewnątrz ograniczenia. W tym miejscu znajduje się nowa wartość współrzędnej punktu. W intuicyjny sposób można to wyjaśnijć tak, że dla punktów nie ma ograniczeń, a przestrzeń przeszukiwań po każdym wymiarze jest jakby "zawinięta".
+Dla każdej współrzędnej sprawdzane są warunki na ograniczenie. W przypadku współrzędnych, na których punkt jest poza ograniczeniem, różnica, pomiędzy ograniczeniem a wartością współrzędnej punktu, jest zapamiętywana. Tę różnicę odkładamy na przeciwległym ograniczeniu po stronie, która jest wewnątrz ograniczenia. W tym miejscu znajduje się nowa wartość współrzędnej punktu. W intuicyjny sposób można to wyjaśnić tak, że dla punktów nie ma ograniczeń, a przestrzeń przeszukiwań po każdym wymiarze jest jakby "zawinięta".
 
 \begin{Verbatim}[baselinestretch=1.1]
 	dla każdej współrzędnej i
@@ -123,7 +123,7 @@ Dla każdej współrzędnej sprawdzane są warunki na ograniczenie. W przapadku 
 
 \subsection{Błądzenie przypadkowe} \label{bladzenie}
 
-Można się spodziewać, że algorytm CMA-ES dla funkcji stałej będzie zachowywał się analogicznie do błądzenia przypadkowego. Takie założenie skłoniło autorów, żeby przyjrzeć się błądzeniu przypadkowemu z ograniczeniami. Błądzenie przypadkowe jest algorytmem dużo prostrzym, niż CMA-ES, więc umożliwia szybsze testowanie i wyciąganie wniosków.\\
+Można się spodziewać, że algorytm CMA-ES dla funkcji stałej będzie zachowywał się analogicznie do błądzenia przypadkowego. Takie założenie skłoniło autorów, żeby przyjrzeć się błądzeniu przypadkowemu z ograniczeniami. Błądzenie przypadkowe jest algorytmem dużo prostszym, niż CMA-ES, więc umożliwia szybsze testowanie i wyciąganie wniosków.\\
 Niech $ X_1, X_2, ... $ będą niezależnymi n-wymiarowymi zmiennymi losowymi o wartości oczekiwanej równej $ \{0\}^n $. Błądzeniem przypadkowym nazywamy sekwencję zmiennych losowych:
 \begin{equation}
 S_0 = 0, S_i=X_1+X_2+...+X_i
@@ -153,8 +153,8 @@ Skrypty zostały zbudowane zgodnie z poniższym pseudokodem.
 Wykresy zamieszczone w tym podrozdziale są histogramami wystąpień punktu. Symulacje skryptów były uruchamiane z liczbą iteracji wynoszącą 2-100 milionów. Szerokość przedziałów na wykresach jest różna i była dobierana tak, aby jak najlepiej przedstawić interesujące fakty.\\
 Wszystkie wykresy, które pokazdują wyniki błądzenia przypadkowego w dwóch wymiarach zostały przetworzone w następujący sposób: otrzymane wyniki symulacji powielono poprzez symetrzyczne odbicie ich względem osi X, osi Y oraz początku układu współrzędnych. Wykonano ten zabieg, aby zwiększyć dokładność wyników. Nie wpływają one na badania, poniważ punkty 0 są środkami ograniczeń obu osi, a z perspektywy algorytmu nie ma znaczenia, w której ćwiartce znajduje się aktualnie punkt.
 
-\subsubsection*{Powrót?}
-Histogramy pokazują, że punkt z większym prawdopodobieństwiem występuje przy ograniczeniach. Takie zachowanie można uznać za intuicyjne, ponieważ potomkowie punktów blisko granicy mogą "wypaść" poza ograniczenie. Po naprawie dziecko będzie tym samym punktem. Symulacja dwuwymiarowa nie pokazuje tego tak dokładnie, natomiast również można dostrzec ten efekt.
+\subsubsection*{Metoda klasyczna}
+Histogramy pokazują, że punkt z większym prawdopodobieństwem występuje przy ograniczeniach. Takie zachowanie można uznać za intuicyjne, ponieważ potomkowie punktów blisko granicy mogą "wypaść" poza ograniczenie. Po naprawie dziecko będzie tym samym punktem. Symulacja dwuwymiarowa nie pokazuje tego tak dokładnie, natomiast również można dostrzec ten efekt.
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{c_n_20M_1__5_5_2}
@@ -174,7 +174,7 @@ Histogramy pokazują, że punkt z większym prawdopodobieństwiem występuje prz
 \end{figure}
 
 \subsubsection*{Rzutowanie}
-Zgodnie z przewidywaniami największe prawdopodobieństwo wystąpienia punktu jest na ograniczeniu, co bardzo dobrze obrazuje rysunek \ref{bladzenie:rzutowanie2d}. Na rysunkach   \ref{bladzenie:rzutowanie1dn} i  \ref{bladzenie:rzutowanie1dj} zakres osi~Y został zmniejszony do odpowiednio $[30000;60000]$ oraz $[70000;140000]$, aby uwypuklić interesujące efekty. W związku z tym, zostały "ucięte" wartości przedziałów brzegowych. Warto zwrócić uwagę na niespodziewane zjawisko - wartości przedziałów blisko ograniczeń są mniejsze, niż pozostałe. Oznacza to, że punkty w tych przedziałach występują z mniejszym prawdopodobieństwem, niż pozostałe. Wydawać by się mogło, że powinno być inaczej, ponieważ podczas symulacji punkty często są rzutowane na ograniczenie. Dodatkowo, w rozkładzie jednostajnym widać, że istnieją przedziały, w~których punkty występują z większym prawdopodobieństwem. Autorom nie udało się formalnie uzasadnić tego zjawiska. Intuicja prowadzi do hipotezy, że punkty, które znalazły się poza ograniczeniem, bez naprawy po kilku iteracjach zapełniałyby "dołek". Naprawa natomiast sprawia, że cała dalsza symulacja zostaje niejako przesunięta. W~ten sposób powstaje "górka" w~rozkładzie jednostajnym. Z charakterystyki rozkładu normalnego może brać się fakt, iż owa górka w nim nie występuje.
+Zgodnie z przewidywaniami największe prawdopodobieństwo wystąpienia punktu jest na ograniczeniu, co bardzo dobrze obrazuje rysunek \ref{bladzenie:rzutowanie2d}. Na rysunkach \ref{bladzenie:rzutowanie1dn} i \ref{bladzenie:rzutowanie1dj} zakres osi~Y został zmniejszony do odpowiednio $[30000;60000]$ oraz $[70000;140000]$, aby uwypuklić interesujące efekty. W związku z tym, zostały "ucięte" wartości przedziałów brzegowych. Warto zwrócić uwagę na niespodziewane zjawisko - wartości przedziałów blisko ograniczeń są mniejsze, niż pozostałe. Oznacza to, że punkty w tych przedziałach występują z mniejszym prawdopodobieństwem, niż pozostałe. Wydawać by się mogło, że powinno być inaczej, ponieważ podczas symulacji punkty często są rzutowane na ograniczenie. Dodatkowo, w rozkładzie jednostajnym widać, że istnieją przedziały, w~których punkty występują z większym prawdopodobieństwem. Autorom nie udało się formalnie uzasadnić tego zjawiska. Intuicja prowadzi do hipotezy, że punkty, które znalazły się poza ograniczeniem, bez naprawy po kilku iteracjach zapełniałyby "dołek". Naprawa natomiast sprawia, że cała dalsza symulacja zostaje niejako przesunięta. W~ten sposób powstaje "górka" w~rozkładzie jednostajnym. Z charakterystyki rozkładu normalnego może brać się fakt, iż owa górka w nim nie występuje.
 
 \begin{figure}[H]
 \centering
@@ -197,9 +197,9 @@ Zgodnie z przewidywaniami największe prawdopodobieństwo wystąpienia punktu je
 \label{bladzenie:rzutowanie1dj}
 \end{figure}
 
-\subsubsection*{Reinicjalizacja}
-Na pierwszy rzut oka wykresy nie ukazują nic nadzwyczajnego, ponieważ łatwo zauważyć pik związany z reinicjalizacją oraz wartości histogramu malejące wraz ze zbliżaniem się do ograniczeń. Autorzy pragną zwrócić uwagę na 2 fakty.\\
-Pierwsze spostrzeżenie, to kształt histogramu. Zarówno dla rozkładu jednostajnego, jak i normalnego w jednym wymiarze jest on stożkowy. Łuk można zauważyć tylko blisko punktu środkowego, w pozostałej części spadek jest liniowy. Brakuje charakterystycznego, gaussowskiego przegięcia. Sytuacja jest ciekawsza, gdy występuje więcej wymiarów. Widać wówczas przegięcie. Dokładniejsze badania pokazały, że przegięcie nie występuje tylko na jednym wymiarze. Tym, który jest relatywnie najkrótszy. Celowo jest użyte słowo relatywnie, ponieważ z~perspektywy błądzenia przypadkolwego i~rozkładu normalnego trzeba brać pod uwagę parametr $\sigma$. Wymiary o małym $\sigma$ będą relatywnie dłuższe od tych z dużym $\sigma$, ponieważ błądzenie będzie wykonywało mniejsze kroki.\\
+\subsubsection*{Reinicjacja}
+Na pierwszy rzut oka wykresy nie ukazują nic nadzwyczajnego, ponieważ łatwo zauważyć pik związany z reinicjacją oraz wartości histogramu malejące wraz ze zbliżaniem się do ograniczeń. Warto jednak zwrócić uwagę na 2 fakty.\\
+Pierwsze spostrzeżenie, to kształt histogramu. Zarówno dla rozkładu jednostajnego, jak i normalnego w jednym wymiarze jest on stożkowy. Łuk można zauważyć tylko blisko punktu środkowego, w pozostałej części spadek jest liniowy. Brakuje charakterystycznego, gaussowskiego przegięcia. Sytuacja jest ciekawsza, gdy występuje więcej wymiarów. Widać wówczas przegięcie. Dokładniejsze badania pokazały, że przegięcie nie występuje tylko na jednym wymiarze - tym, który jest relatywnie najkrótszy. Celowo jest użyte słowo relatywnie, ponieważ z~perspektywy błądzenia przypadkowego i~rozkładu normalnego trzeba brać pod uwagę parametr $\sigma$. Wymiary o małym $\sigma$ będą relatywnie dłuższe od tych z dużym $\sigma$, ponieważ błądzenie będzie wykonywało mniejsze kroki.\\
 Na rysunku \ref{bladzenie:probkowanie1dj} można dostrzec też dwa uskoki, które związane są z pikiem w punkcie~$0$ oraz charakterystyką rozkładu.
 
 \begin{figure}[H]
@@ -227,7 +227,7 @@ Na rysunku \ref{bladzenie:probkowanie1dj} można dostrzec też dwa uskoki, któr
 \end{figure}
 
 \subsubsection*{Próbkowanie}
-Ten rozkład charakteryzuje się spadkiem wartości prawdopodobieństwa wraz ze zbliżaniem się do ograniczenia. Punky, które wypadłyby poza ograniczenia oraz ich potomkowie są przesuwane w kierunku środka przedziału.
+Ten rozkład charakteryzuje się spadkiem wartości prawdopodobieństwa wraz ze zbliżaniem się do ograniczenia. Punkty, które wypadłyby poza ograniczenia oraz ich potomkowie są przesuwane w kierunku środka przedziału.
 
 \begin{figure}[H]
 \centering
@@ -249,7 +249,7 @@ Ten rozkład charakteryzuje się spadkiem wartości prawdopodobieństwa wraz ze 
 \end{figure}
 
 \subsubsection*{Zawijanie}
-Wyobraźmy sobie, że naszą symulację przeprowadzamy bez ograniczeń, następnie wykres z wynikami tniemy w równych odstępach wzdłuż każdej osi. Na koniec tak pocięte części łączymy w jeden wykres. Takie zachowanie symuluje zawijanie. W związku z tym nie dziwi fakt, że poniższe histogramy przedstawkają rozkład jednostajny z szumem.
+Wyobraźmy sobie, że naszą symulację przeprowadzamy bez ograniczeń, następnie wykres z wynikami tniemy w równych odstępach wzdłuż każdej osi. Na koniec tak pocięte części łączymy w jeden wykres. Takie zachowanie symuluje zawijanie. W związku z tym nie dziwi fakt, że poniższe histogramy przedstawiają rozkład jednostajny z szumem.
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{w_n_10M_2__20_20__10_10_4_2}
@@ -263,7 +263,7 @@ Wyobraźmy sobie, że naszą symulację przeprowadzamy bez ograniczeń, następn
 \end{figure}
 
 \subsubsection*{Odbicie}
-Podobnie jak zawijanie, odbicie zwraca histogram rozkładu normalnego z szumem. W tej sytuacji nieco trudniej o analogię, lecz po chwili zastanowienia nie dziwi kształt poniższych wykresów.
+Podobnie jak zawijanie, odbicie zwraca histogram rozkładu normalnego z szumem. W~tej sytuacji nieco trudniej o analogię, lecz po chwili zastanowienia nie dziwi kształt poniższych wykresów.
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{rf_n_10M_2__20_20__10_10_4_2}
@@ -285,22 +285,22 @@ Podobnie jak zawijanie, odbicie zwraca histogram rozkładu normalnego z szumem. 
 \end{figure}
 
 \subsection{Test przesunięć}
-Dodatkowo został wykonany test, w którym badano wartość oczekiwną przesunięcia punktu w kolejnej iteracji (razem z naprawą). Dla każdej z metod wyglądał on podobnie:
+Dodatkowo został wykonany test, w którym badano wartość oczekiwaną przesunięcia punktu w kolejnej iteracji (razem z naprawą). Dla każdej z metod wyglądał on podobnie:
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{conservative2dprzesuniecie}
-\caption{Test przesunięć - powrót?}
+\caption{Test przesunięć - metoda klasyczna}
 \end{figure}
 
-Jedynie dla zawijania oraz reinicjalizacji długości wektorów były znacząco większe. W pozostałych zmieniał się kierunek oraz długość wektora. Były to jednak zmiany wynikające pośrednio z pokazanych wcześniej histogramów.
+Jedynie dla zawijania oraz reinicjacji długości wektorów były znacząco większe. W pozostałych zmieniał się kierunek oraz długość wektora. Były to jednak zmiany wynikające pośrednio z pokazanych wcześniej histogramów.
 
 \subsection{Wnioski}
-Każda z technik ma swoje charakterystyczne cechy. 
+Każda z technik ma swoje charakterystyczne cechy.
 
 \pagebreak
 
-\section{Zbiory benchmarkowe}
+\section{Metodyka testowania metod optymalizacji globalnej}
 
 \subsection{CEC 2013}
 - wybrane kilka funkcji\\
@@ -320,7 +320,7 @@ Zgodnie z założeniami poczynionymi w rozdziale \ref{bladzenie} testy algorytmu
 
 \subsection{Algorytm CMA-ES}
 Klasyczne algorytmy ewolucyjne nie dostosowują się do charakterystyki optymalizowanej funkcji. W większości z nich rozkład prawdopodobieństwa losowanych punktów jest stały. Z tego faktu wynika problem dobrania parametrów przeszukiwania. Na przeciw tym problemom wychodzi algorytm CMA-ES, który w swej idei ma dopasowywać się do badanej funkcji.\\
-Rozwinięcie akronimu CME-ES podpowiada, w jaki sposób jest to realizowane: Covariance Matrix Adaptation - Evolution Strategy (adaptacja macierzy kowariancji - strategia ewolucyjna). Punkty losowane są na podstawie macierzy kowariancji, która jest w każdej iteracji dostosowywana do aktualnej sytuacji przeszukiwań.
+Rozwinięcie akronimu CME-ES podpowiada, w jaki sposób jest to realizowane: Covariance Matrix Adaptation - Evolution Strategy (adaptacja macierzy kowariancji -~strategia ewolucyjna). Punkty losowane są na podstawie macierzy kowariancji, która jest w każdej iteracji dostosowywana do aktualnej sytuacji przeszukiwań.
 
 \subsubsection*{Szczegóły}
 Rola dotychczas wygenerowanych punktów
