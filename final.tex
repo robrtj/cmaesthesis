@@ -123,26 +123,48 @@ Dla każdej współrzędnej sprawdzane są warunki na ograniczenie. W przypadku 
 
 \subsection{Błądzenie przypadkowe} \label{bladzenie}
 
-Można się spodziewać, że algorytm CMA-ES dla funkcji stałej będzie zachowywał się analogicznie do błądzenia przypadkowego. Takie założenie skłoniło autorów, żeby przyjrzeć się błądzeniu przypadkowemu z ograniczeniami. Błądzenie przypadkowe jest algorytmem dużo prostszym, niż CMA-ES, więc umożliwia szybsze testowanie i wyciąganie wniosków.\\
-Niech $ X_1, X_2, ... $ będą niezależnymi n-wymiarowymi zmiennymi losowymi o wartości oczekiwanej równej $ \{0\}^n $. Błądzeniem przypadkowym nazywamy sekwencję zmiennych losowych:
+Można się spodziewać, że algorytm CMA-ES dla funkcji stałej będzie zachowywał się analogicznie do błądzenia przypadkowego. Takie założenie skłoniło autora, żeby zbadać błądzenie przypadkowe z ograniczeniami. Błądzenie przypadkowe jest algorytmem dużo prostszym, niż CMA-ES, więc umożliwia szybsze testowanie i wyciąganie wniosków.\\
+Niech $ X_1, X_2, ... $ będą niezależnymi n-wymiarowymi zmiennymi losowymi o wartości oczekiwanej równej $ [0]^n $. Błądzeniem przypadkowym nazywamy sekwencję punktów $S_1$, $S_2$, ..., takich że:
+
 \begin{equation}
-S_0 = 0, S_i=X_1+X_2+...+X_i
+S_1 = X_1, S_i=S_{i-1}+X_i
 \end{equation}
 
+Zmienne losowe mogą być realizowane w różny sposób. Mogą to być wektory o rozkładzie normalnym, jednostajnym lub innym.
+
 \subsection{Metoda przeprowadzania testów}
-W celu przeprowadzenia testów napisano szereg skryptów w języku MATLAB. Testy te obserwowały wpływ metod uwzględniania ograniczeń na ruch punktu. W rezultacie miały one pokazać rozkład prawdopodobieństwa punktu dla danej metody. Metody wybrane do testowania są takie jak w podrozdziale \ref{transformacje}.
-Ponadto badano 2 różne metody losowania punktów: z rozkładem normalnym oraz jednostajnym. W przypadku rozkładu jednostajnego losowano liczby z przedziału $[-0.5; 0.5]$ (przedział co najmniej kilkukrotnie krótszy od ograniczeń kostkowych).
+Celem testów jest zaobserwowanie, jaki wpływ na symulacje ma metoda uwzględniania ograniczeń. Wybrano 2 cechy, które miały być przetestowane:
+\begin{enumerate}
+\item Wartość oczekiwana generowanego punktu (razem z poprawą).
+\item Rozkład prawdopodobieństwa generowanych punktów.
+\end{enumerate}
 
+Sposoby testowania obu cech są opisane w kolejnych podrozdziałach.
 
-\subsubsection*{Skrypty}
-Skrypty zostały zbudowane zgodnie z poniższym pseudokodem.
+\subsubsection{Wartość oczekiwana generowanego punktu}
+Błądzenie przypadkowe jest dobrze określone. W tym algorytmie wartością oczekiwaną losowanej liczby $X_i$ jest 0. Implikuje to fakt, że wartością oczekiwaną $S_i$ jest $S_{i-1}$. Dodanie ograniczeń kostkowych powoduje, że nadal losojuemy liczbę $X_i$, której wartość oczekiwana jest równa 0. Dodajemy jednak metody naprawy. W związku z tym nie zawsze wartością oczekiwaną $S_i$ jest $S_{i-1}$.\\
+Dla każdego punktu $p$ przestrzeni przeszukiwań można przypisać wektor $\overrightarrow{d}$. Początek $\overrightarrow{d}$ znajduje się w $p$. Załóżmy teraz, że $p$ jest punktem $S_i$ pewnego błądzenia przypadkowego z ograniczeniami. Koniec wektora $\overrightarrow{d}$ znajduje się w wartości oczekiwanej punktu $S_{i+1}$.\\
+Wykres, który będzie zawierał wektory $\overrightarrow{d}$, pozwoli na określenie charakterystyki przemieszczania się punktów w poszczególnych częściach przestrzeni przeszukiwań.\\
+
+\subsubsection*{Implementacja}
+Do wizualizacji wybrano symulację, w której punkty posiadają 2 wymiary. Pozwala to na przejrzystą wizualizację wektorów dla każdego z punktów. Pokazuje też zachowanie się wektorów w rogach - punktach, które są blisko ograniczeń.\\
+Dla obu wymiarów wybrano kilkanaście, równoodległych punktów. W skład tych punktów wchodziły też punkty znajdujące się na ograniczeniach. Następnie stworzono 2 pętle po tych punktach (jedna zagnieżdżona w drugiej). W ten sposób uzyskano regularnie rozłożone punkty w dwóch wymiarach.\\
+Dla każdego z tych punktów przeprowadzono następujące obliczenia. 1000 razy zasymulowano krok algorytmu błądzenia przypadkowego (z rozkładem normalnym) z odpowiednią naprawą. Otrzymano tysiąc punktów, z których następnie obliczono średnią arytmetyczną. Tak uzyskany punkt potraktowano jako wartość oczekiwaną i wyrysowano wektor $\overrightarrow{d}$.
+
+\subsubsection{Rozkład prawdopodobieństwa generowanych punktów}
+Punkty w błądzeniu przypadkowym poruszają się chaotycznie. Ta losowość jest częściowow uporządkowana na ograniczeniach. W zależności od metody naprawy, punkty zachowują się inaczej, a rozkład prawdopodobieństwa jest zniekształcony. Autor postanowił przyjrzeć się jak wygląda rozkład prawdopodobieństwa wystąpienia punktu z~perspektywy całej symulacji.\\
+Dla każdej metody naprawy opisanej w \ref{transformacje} jednokrotnie uruchomiono algorytm błądzenia przypadkowego jednego punktu. Symulowano oddzielnie również błądzenie z rozkładem normalnym oraz jenostajnym na przedziale $[-0.5; 0.5]$ (przedział co najmniej kilkukrotnie krótszy od ograniczeń kostkowych). Po każdej iteracji nowo wygenerowany punkt zapisywano w tablicy. Z tak przygotowanej tablicy generowano histogram.
+
+\subsubsection*{Implementacja}
+Dla każdej z metod naprawy  przygotowano oddzielny skrypt. Pseudokod skryptu zamiszczono poniżej.
 \begin{Verbatim}[baselinestretch=1.1]
 	x - błądzący punkt
 	punkty - tablica wszystkich położeń punktu x
 	iteracje - liczba iteracji podana jako parametr
 	i = 0
 	dopóki i < iteracje
-		wylosuj nowe położenie punktu x
+		d = wektor wylosowany z zadanym rozkładem
+		x = x + d
 		jeżeli x jest poza ograniczeniem
 			popraw x
 		dodaj x do tablicy punkty
@@ -155,46 +177,55 @@ Wszystkie wykresy, które pokazdują wyniki błądzenia przypadkowego w dwóch w
 
 \subsubsection*{Metoda klasyczna}
 Histogramy pokazują, że punkt z większym prawdopodobieństwem występuje przy ograniczeniach. Takie zachowanie można uznać za intuicyjne, ponieważ potomkowie punktów blisko granicy mogą "wypaść" poza ograniczenie. Po naprawie dziecko będzie tym samym punktem. Symulacja dwuwymiarowa nie pokazuje tego tak dokładnie, natomiast również można dostrzec ten efekt.
+
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{c_n_20M_1__5_5_2}
-\caption{Rozkład normalny}
+\includegraphics[width=\textwidth]{conservative2dprzesuniecie}
+\caption{Wartość oczekiwana punktu}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{c_j_2M_1__5_5}
-\caption{Rozkład jednostajny}
+\subfloat[Generowanie z rozkładem normalnym]{\includegraphics[width=0.45\textwidth]{c_n_20M_1__5_5_2}}
+\quad
+\subfloat[Generowanie z rozkładem jednostajnym]{\includegraphics[width=0.45\textwidth]{c_j_2M_1__5_5}}
+\caption{Rozkład prawdopodobieństwa punktów; 1 wymiar}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{c_n_10M_2__20_20__10_10_4}
-\caption{Rozkład normalny na dwóch wymiarach}
+\caption{Rozkład prawdopodobieństwa punktów; 2 wymiary; generowanie z rozkładem normalnym}
 \end{figure}
 
 \subsubsection*{Rzutowanie}
-Zgodnie z przewidywaniami największe prawdopodobieństwo wystąpienia punktu jest na ograniczeniu, co bardzo dobrze obrazuje rysunek \ref{bladzenie:rzutowanie2d}. Na rysunkach \ref{bladzenie:rzutowanie1dn} i \ref{bladzenie:rzutowanie1dj} zakres osi~Y został zmniejszony do odpowiednio $[30000;60000]$ oraz $[70000;140000]$, aby uwypuklić interesujące efekty. W związku z tym, zostały "ucięte" wartości przedziałów brzegowych. Warto zwrócić uwagę na niespodziewane zjawisko - wartości przedziałów blisko ograniczeń są mniejsze, niż pozostałe. Oznacza to, że punkty w tych przedziałach występują z mniejszym prawdopodobieństwem, niż pozostałe. Wydawać by się mogło, że powinno być inaczej, ponieważ podczas symulacji punkty często są rzutowane na ograniczenie. Dodatkowo, w rozkładzie jednostajnym widać, że istnieją przedziały, w~których punkty występują z większym prawdopodobieństwem. Autorom nie udało się formalnie uzasadnić tego zjawiska. Intuicja prowadzi do hipotezy, że punkty, które znalazły się poza ograniczeniem, bez naprawy po kilku iteracjach zapełniałyby "dołek". Naprawa natomiast sprawia, że cała dalsza symulacja zostaje niejako przesunięta. W~ten sposób powstaje "górka" w~rozkładzie jednostajnym. Z charakterystyki rozkładu normalnego może brać się fakt, iż owa górka w nim nie występuje.
+Zgodnie z przewidywaniami największe prawdopodobieństwo wystąpienia punktu jest na ograniczeniu, co bardzo dobrze obrazuje rysunek \ref{bladzenie:rzutowanie2d}. Na rysunkach \ref{bladzenie:rzutowanie1dn} i \ref{bladzenie:rzutowanie1dj} zakres osi~Y został zmniejszony do odpowiednio $[30000;60000]$ oraz $[70000;140000]$, aby uwypuklić interesujące efekty. W związku z tym, zostały "ucięte" wartości przedziałów brzegowych. Warto zwrócić uwagę na niespodziewane zjawisko - wartości przedziałów blisko ograniczeń są mniejsze, niż pozostałe. Oznacza to, że punkty w tych przedziałach występują z mniejszym prawdopodobieństwem, niż pozostałe. Wydawać by się mogło, że powinno być inaczej, ponieważ podczas symulacji punkty często są rzutowane na ograniczenie. Dodatkowo, w rozkładzie jednostajnym widać, że istnieją przedziały, w~których punkty występują z większym prawdopodobieństwem. Autorowi nie udało się formalnie uzasadnić tego zjawiska. Intuicja prowadzi do hipotezy, że punkty, które znalazły się poza ograniczeniem, bez naprawy po kilku iteracjach zapełniałyby "dołek". Naprawa natomiast sprawia, że cała dalsza symulacja zostaje niejako przesunięta. W~ten sposób powstaje "górka" w~rozkładzie jednostajnym. Z charakterystyki rozkładu normalnego może brać się fakt, iż owa górka w nim nie występuje.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{p_n_10M_2__20_20__10_10_4_2}
-\caption{Rozkład normalny na dwóch wymiarach}
-\label{bladzenie:rzutowanie2d}
+\includegraphics[width=\textwidth]{projection2dprzesuniecie}
+\caption{Wartość oczekiwana punktu}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{p_n_50M_1__5_5}
-\caption{Rozkład normalny}
+\caption{Rozkład prawdopodobieństwa punktów; 1 wymiar; generowanie z rozkładem normalnym}
 \label{bladzenie:rzutowanie1dn}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{p_j_100M_1__3_3}
-\caption{Rozkład jednostajny}
+\caption{Rozkład prawdopodobieństwa punktów; 1 wymiar; generowanie z rozkładem jednostajnym}
 \label{bladzenie:rzutowanie1dj}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{p_n_10M_2__20_20__10_10_4_2}
+\caption{Rozkład prawdopodobieństwa punktów; 2 wymiary; generowanie z rozkładem normalnym}
+\label{bladzenie:rzutowanie2d}
 \end{figure}
 
 \subsubsection*{Reinicjacja}
@@ -204,26 +235,32 @@ Na rysunku \ref{bladzenie:probkowanie1dj} można dostrzec też dwa uskoki, któr
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{ri_n_10M_2__20_20__10_10_4}
-\caption{Rozkład normalny na dwóch wymiarach}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{ri_n_10M_2__20_20__10_10_4_1D}
-\caption{Rozkład normalny na dwóch wymiarach; oddzielne histogramy dla obu wymiarów}
+\includegraphics[width=\textwidth]{reinitialization2dprzesuniecie}
+\caption{Wartość oczekiwana punktu}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{ri_n_20M_1__5_5}
-\caption{Rozkład normalny}
+\caption{Rozkład prawdopodobieństwa punktów; 1 wymiar; generowanie z rozkładem normalnym}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{ri_j_20M_1__3_3}
-\caption{Rozkład jednostajny}
+\caption{Rozkład prawdopodobieństwa punktów; 1 wymiar; generowanie z rozkładem jednostajnym}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{ri_n_10M_2__20_20__10_10_4}
+\caption{Rozkład prawdopodobieństwa punktów; 2 wymiary; generowanie z rozkładem normalnym}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{ri_n_10M_2__20_20__10_10_4_1D}
+\caption{Rozkład prawdopodobieństwa punktów; 2 wymiary; generowanie z rozkładem normalnym; oddzielne histogramy dla obu wymiarów}
 \end{figure}
 
 \subsubsection*{Próbkowanie}
@@ -231,67 +268,60 @@ Ten rozkład charakteryzuje się spadkiem wartości prawdopodobieństwa wraz ze 
 
 \begin{figure}[H]
 \centering
+\includegraphics[width=\textwidth]{sampling2dprzesuniecie}
+\caption{Wartość oczekiwana punktu}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\subfloat[Generowanie z rozkładem normalnym]{\includegraphics[width=0.45\textwidth]{s_n_10M_1__5_5}}
+\quad
+\subfloat[Generowanie z rozkładem jednostajnym]{\includegraphics[width=0.45\textwidth]{s_j_20M_1__3_3}}
+\caption{Rozkład prawdopodobieństwa punktów; 1 wymiar}
+\end{figure}
+
+\begin{figure}[H]
+\centering
 \includegraphics[width=\textwidth]{s_n_10M_2__20_20__10_10_4_2}
-\caption{Rozkład normalny na dwóch wymiarach}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{s_n_10M_1__5_5}
-\caption{Rozkład normalny}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{s_j_20M_1__3_3}
-\caption{Rozkład jednostajny}
-\label{bladzenie:probkowanie1dj}
+\caption{Rozkład prawdopodobieństwa punktów; 2 wymiary; generowanie z rozkładem normalnym}
 \end{figure}
 
 \subsubsection*{Zawijanie}
 Wyobraźmy sobie, że naszą symulację przeprowadzamy bez ograniczeń, następnie wykres z wynikami tniemy w równych odstępach wzdłuż każdej osi. Na koniec tak pocięte części łączymy w jeden wykres. Takie zachowanie symuluje zawijanie. W związku z tym nie dziwi fakt, że poniższe histogramy przedstawiają rozkład jednostajny z szumem.
+
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{w_n_10M_2__20_20__10_10_4_2}
-\caption{Rozkład normalny na dwóch wymiarach}
+\includegraphics[width=\textwidth]{wrapping2dprzesuniecie}
+\caption{Wartość oczekiwana punktu}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{w_j_20M_1__3_3}
-\caption{Rozkład jednostajny}
+\subfloat[1 wymiar; generowanie z rozkładem normalnym]{\includegraphics[width=0.45\textwidth]{w_n_10M_2__20_20__10_10_4_2}}
+\quad
+\subfloat[2 wymiary; generowanie z rozkładem jednostajnym]{\includegraphics[width=0.45\textwidth]{w_j_20M_1__3_3}}
+\caption{Rozkład prawdopodobieństwa punktów;}
 \end{figure}
 
 \subsubsection*{Odbicie}
 Podobnie jak zawijanie, odbicie zwraca histogram rozkładu normalnego z szumem. W~tej sytuacji nieco trudniej o analogię, lecz po chwili zastanowienia nie dziwi kształt poniższych wykresów.
+
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{rf_n_10M_2__20_20__10_10_4_2}
-\caption{Rozkład normalny na dwóch wymiarach}
+\includegraphics[width=\textwidth]{reflection2dprzesuniecie}
+\caption{Wartość oczekiwana punktu}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{rf_j_100M_1__3_3}
-\caption{Rozkład jednostajny}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\subfloat[test 1]{\includegraphics[width=0.45\textwidth]{ri_n_10M_2__20_20__10_10_4_1D}}
+\subfloat[1 wymiar; generowanie z rozkładem normalnym]{\includegraphics[width=0.45\textwidth]{rf_n_10M_2__20_20__10_10_4_2}}
 \quad
-\subfloat[test 2]{\includegraphics[width=0.45\textwidth]{p_j_100M_1__3_3}}
-\caption{TEST Obrazy obok siebie}
+\subfloat[2 wymiary; generowanie z rozkładem jednostajnym]{\includegraphics[width=0.45\textwidth]{rf_j_100M_1__3_3}}
+\caption{Rozkład prawdopodobieństwa punktów;}
 \end{figure}
 
 \subsection{Test przesunięć}
 Dodatkowo został wykonany test, w którym badano wartość oczekiwaną przesunięcia punktu w kolejnej iteracji (razem z naprawą). Dla każdej z metod wyglądał on podobnie:
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{conservative2dprzesuniecie}
-\caption{Test przesunięć - metoda klasyczna}
-\end{figure}
 
 Jedynie dla zawijania oraz reinicjacji długości wektorów były znacząco większe. W pozostałych zmieniał się kierunek oraz długość wektora. Były to jednak zmiany wynikające pośrednio z pokazanych wcześniej histogramów.
 
@@ -319,7 +349,7 @@ Zgodnie z założeniami poczynionymi w rozdziale \ref{bladzenie} testy algorytmu
 \section{Wpływ technik na efektywność CMA-ES}
 
 \subsection{Algorytm CMA-ES}
-Klasyczne algorytmy ewolucyjne nie dostosowują się do charakterystyki optymalizowanej funkcji. W większości z nich rozkład prawdopodobieństwa losowanych punktów jest stały. Z tego faktu wynika problem dobrania parametrów przeszukiwania. Na przeciw tym problemom wychodzi algorytm CMA-ES, który w swej idei ma dopasowywać się do badanej funkcji.\\
+Klasyczne algorytmy ewolucyjne nie dostosowują się do charakterystyki optymalizowanej funkcji. W większości z nich, podczas generowania punktów, rozkład prawdopodobieństwa jest stały. Z tego faktu wynika problem dobrania parametrów przeszukiwania. Na przeciw tym problemom wychodzi algorytm CMA-ES, który w swej idei ma dopasowywać się do badanej funkcji.\\
 Rozwinięcie akronimu CME-ES podpowiada, w jaki sposób jest to realizowane: Covariance Matrix Adaptation - Evolution Strategy (adaptacja macierzy kowariancji -~strategia ewolucyjna). Punkty losowane są na podstawie macierzy kowariancji, która jest w każdej iteracji dostosowywana do aktualnej sytuacji przeszukiwań.
 
 \subsubsection*{Szczegóły}
