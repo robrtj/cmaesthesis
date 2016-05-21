@@ -55,7 +55,7 @@ Niektóre problemy optymalizacyjne posiadają ograniczenia. Szukając rozwiązan
 W tej pracy skupiono się na transformacji rozwiązań.
 
 \subsection{Transformacje rozwiązań} \label{transformacje}
-Nie istnieje jedna technika transformacji rozwiązań spoza ograniczeń na dopuszczalne. W kolejnych podrozdziałach znajdują się metody transformacji rozwiązań, które były badane. Każda z technik jest opisana słownie oraz pseudokodem. Opis słowny zawiera wyjaśnienie, co się dzieje z punktem, który znalazł się poza ograniczeniem. W~pseudokodzie zastosowano następujące oznaczenia:
+Istnieje wiele technik transformacji rozwiązań spoza ograniczeń na dopuszczalne. W~kolejnych podrozdziałach znajdują się metody transformacji rozwiązań, które zostały zbadane. Każda z technik jest opisana słownie oraz pseudokodem. Opis słowny zawiera wyjaśnienie, co się dzieje z punktem, który znalazł się poza ograniczeniem. W~pseudokodzie zastosowano następujące oznaczenia:
 \begin{itemize}[noitemsep]
 \item $x$ - punkt, który poddajemy naprawie
 \item $x'$ - rodzic punktu $x$, czyli z punktu $x'$ z zadanym rozkładem został wygenerowany punkt $x$
@@ -133,7 +133,7 @@ S_1 = X_1, S_i=S_{i-1}+X_i
 Zmienne losowe mogą być realizowane w różny sposób. Mogą to być wektory o rozkładzie normalnym, jednostajnym lub innym.
 
 \subsection{Metoda przeprowadzania testów}
-Celem testów jest zaobserwowanie, jaki wpływ na symulacje ma metoda uwzględniania ograniczeń. Wybrano 2 cechy, które miały być przetestowane:
+Celem testów jest zaobserwowanie, jaki wpływ na symulację ma metoda uwzględniania ograniczeń. Wybrano 2 cechy, które miały być przetestowane:
 \begin{enumerate}
 \item Wartość oczekiwana generowanego punktu (razem z poprawą).
 \item Rozkład prawdopodobieństwa generowanych punktów.
@@ -152,7 +152,7 @@ Dla obu wymiarów wybrano kilkanaście, równoodległych punktów. W skład tych
 Dla każdego z tych punktów przeprowadzono następujące obliczenia. 1000 razy zasymulowano krok algorytmu błądzenia przypadkowego (z rozkładem normalnym) z odpowiednią naprawą. Otrzymano tysiąc punktów, z których następnie obliczono średnią arytmetyczną. Tak uzyskany punkt potraktowano jako wartość oczekiwaną i wyrysowano wektor $\overrightarrow{d}$.
 
 \subsubsection{Rozkład prawdopodobieństwa generowanych punktów}
-Punkty w błądzeniu przypadkowym poruszają się chaotycznie. Ta losowość jest częściowow uporządkowana na ograniczeniach. W zależności od metody naprawy, punkty zachowują się inaczej, a rozkład prawdopodobieństwa jest zniekształcony. Autor postanowił przyjrzeć się jak wygląda rozkład prawdopodobieństwa wystąpienia punktu z~perspektywy całej symulacji.\\
+Punkty w błądzeniu przypadkowym poruszają się chaotycznie. Ta losowość jest częściowo uporządkowana na ograniczeniach. W zależności od metody naprawy, punkty zachowują się inaczej, a rozkład prawdopodobieństwa jest zniekształcony. Autor postanowił przyjrzeć się jak wygląda rozkład prawdopodobieństwa wystąpienia punktu z~perspektywy całej symulacji.\\
 Dla każdej metody naprawy opisanej w \ref{transformacje} jednokrotnie uruchomiono algorytm błądzenia przypadkowego jednego punktu. Symulowano oddzielnie również błądzenie z rozkładem normalnym oraz jenostajnym na przedziale $[-0.5; 0.5]$ (przedział co najmniej kilkukrotnie krótszy od ograniczeń kostkowych). Po każdej iteracji nowo wygenerowany punkt zapisywano w tablicy. Z tak przygotowanej tablicy generowano histogram.
 
 \subsubsection*{Implementacja}
@@ -331,18 +331,13 @@ Każda z technik ma swoje charakterystyczne cechy.
 \pagebreak
 
 \section{Metodyka testowania metod optymalizacji globalnej}
+Funkcje posiadają charakterystyczne cechy, m.in. monotoniczność, liczba ekstremów, ciągłość. Metody optymalizacji globalnej również posiadają swoje charakterystyczne własności. W zależności od przypadku, wymagania stawiane algorytmowi mogą być różne: szybkości działania, przeszukanie całej przestrzeni, czy też dokładne określenie ekstremum. Złożenie tego wszystkiego powoduje, że trudno jednoznacznie okreslić, która metoda optymalizacji jest najlepsza. Warto jednak posiadać wiedzę w jakich przypadkach metoda przynosi lepsze rezultaty.\\
+Zapewne zgodziliby się z tym stwierzeniem twócy konkursów takich jak CEC, czy BBOB. Tworzą oni szereg funkcji benchmarkowych, które mają na celu emiprycznie pokazać silne i słabe strony algorytmów.
 
-\subsection{CEC 2013}
-- wybrane kilka funkcji\\
-- kilkukrotne powtórzenie testów\\
-- porównanie dokładności wyników i liczby iteracji
+\subsection{Funkcje benchmarkowe}
+Funkcje benchmarkowe, to funkcje, w których znalezienie minimum zajmuje dużo czasu. Trudności polegają między innymi na wielu ekstremach funkcji lub specyficznym umieszczeniu minimum globalnego.
 
-\subsection{Porównanie wyników}
-Zgodnie z założeniami poczynionymi w rozdziale \ref{bladzenie} testy algorytmu CMA-ES powinny przynieść rezultaty zbliżone do testów błądzenia przypadkowego. Do przeprowadzania testów została użyta biblioteka przygotowana przez Nikolausa Hansena, współautora algorytmu CMA-ES. Podobnie, jak w przypadku błądzenia przypadkowego, wykorzystano implementację w języku MATLAB ---przypis---.
-
-\subsection{Metody agregacji}
-
-\subsection{Wnioski}
+\subsection{Techniki porównywania wyników}
 
 \pagebreak
 
@@ -354,6 +349,12 @@ Rozwinięcie akronimu CME-ES podpowiada, w jaki sposób jest to realizowane: Cov
 
 \subsubsection*{Szczegóły}
 Rola dotychczas wygenerowanych punktów
+
+\subsection{CEC 2013}
+- wybrane kilka funkcji\\
+- kilkukrotne powtórzenie testów\\
+- porównanie dokładności wyników i liczby iteracji
+Zgodnie z założeniami poczynionymi w rozdziale \ref{bladzenie} testy algorytmu CMA-ES powinny przynieść rezultaty zbliżone do testów błądzenia przypadkowego. Do przeprowadzania testów została użyta biblioteka przygotowana przez Nikolausa Hansena, współautora algorytmu CMA-ES. Podobnie, jak w przypadku błądzenia przypadkowego, wykorzystano implementację w języku MATLAB ---przypis---.
 
 \pagebreak
 
