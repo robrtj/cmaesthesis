@@ -326,16 +326,17 @@ Dodatkowo został wykonany test, w którym badano wartość oczekiwaną przesuni
 Jedynie dla zawijania oraz reinicjacji długości wektorów były znacząco większe. W pozostałych zmieniał się kierunek oraz długość wektora. Były to jednak zmiany wynikające pośrednio z pokazanych wcześniej histogramów.
 
 \subsection{Wnioski}
-Każda z technik ma swoje charakterystyczne cechy.
+Techniki uwzględniania ograniczeń mają swoje charakterystyczne cechy. W większości metod zachowanie pojedynczej cząsteczki przekłada się na globalne zachowanie całego algorytmu. Testy pokazały cechy, które nie były oczywiste podczas prostej analizy algorytmów.\\
+Z perspektywy algorytmu CMA-ES warto zwrócić uwagę przede wszystkim na metody zawijania i reinicjacji. W tych metodach wartości oczekiwane punktów znajdują się daleko od rodzica. Oznacza to, że w algorytmie CMA-ES macierz kowariancji może znacząco się zniekształcać.
 
 \pagebreak
 
 \section{Metodyka testowania metod optymalizacji globalnej}
-Funkcje posiadają charakterystyczne cechy, m.in. monotoniczność, liczba ekstremów, ciągłość. Metody optymalizacji globalnej również posiadają swoje charakterystyczne własności. W zależności od przypadku, wymagania stawiane algorytmowi mogą być różne: szybkości działania, przeszukanie całej przestrzeni, czy też dokładne określenie ekstremum. Złożenie tego wszystkiego powoduje, że trudno jednoznacznie okreslić, która metoda optymalizacji jest najlepsza. Warto jednak posiadać wiedzę w jakich przypadkach metoda przynosi lepsze rezultaty.\\
-Zapewne zgodziliby się z tym stwierzeniem twócy konkursów takich jak CEC, czy BBOB. Tworzą oni szereg funkcji benchmarkowych, które mają na celu emiprycznie pokazać silne i słabe strony algorytmów.
+Funkcje posiadają charakterystyczne cechy, m.in. monotoniczność, liczba ekstremów, ciągłość. Metody optymalizacji globalnej również posiadają swoje charakterystyczne własności. W zależności od przypadku, wymagania stawiane algorytmowi mogą być różne: szybkości działania, przeszukanie całej przestrzeni, czy też dokładne określenie ekstremum. Połączenie tego wszystkiego powoduje, że trudno jednoznacznie okreslić, która metoda optymalizacji jest najlepsza. Warto jednak posiadać wiedzę w których przypadkach metoda przynosi lepsze rezultaty.\\
+Zapewne zgodziliby się z tym stwierzeniem twócy konkursów takich jak CEC, czy BBOB. Tworzą oni szereg funkcji benchmarkowych, które mają na celu emiprycznie pokazać silne i słabe strony algorytmów w konkretnych sytuacjach.
 
 \subsection{Funkcje benchmarkowe}
-Funkcje benchmarkowe, to funkcje, w których znalezienie minimum zajmuje dużo czasu. Trudności polegają między innymi na wielu ekstremach funkcji lub specyficznym umieszczeniu minimum globalnego.
+Funkcje benchmarkowe, to złożone furnkcje. Skomplikowanie polega między innymi na wielu ekstremach funkcji lub specyficznym umieszczeniu minimum globalnego. Dzięki nim można porównać algorytmy.
 
 \subsection{Techniki porównywania wyników}
 
@@ -344,11 +345,39 @@ Funkcje benchmarkowe, to funkcje, w których znalezienie minimum zajmuje dużo c
 \section{Wpływ technik na efektywność CMA-ES}
 
 \subsection{Algorytm CMA-ES}
-Klasyczne algorytmy ewolucyjne nie dostosowują się do charakterystyki optymalizowanej funkcji. W większości z nich, podczas generowania punktów, rozkład prawdopodobieństwa jest stały. Z tego faktu wynika problem dobrania parametrów przeszukiwania. Na przeciw tym problemom wychodzi algorytm CMA-ES, który w swej idei ma dopasowywać się do badanej funkcji.\\
-Rozwinięcie akronimu CME-ES podpowiada, w jaki sposób jest to realizowane: Covariance Matrix Adaptation - Evolution Strategy (adaptacja macierzy kowariancji -~strategia ewolucyjna). Punkty losowane są na podstawie macierzy kowariancji, która jest w każdej iteracji dostosowywana do aktualnej sytuacji przeszukiwań.
+Klasyczne algorytmy ewolucyjne nie dostosowują się do charakterystyki optymalizowanej funkcji. W większości z nich, podczas generowania punktów, rozkład prawdopodobieństwa jest stały. Z tego faktu wynika problem ustalenia parametrów przeszukiwania. Na przeciw temu wychodzi algorytm CMA-ES, który w swej idei ma dopasowywać się do badanej funkcji.\\
+Rozwinięcie akronimu CME-ES podpowiada, w jaki sposób jest to realizowane: Covariance Matrix Adaptation - Evolution Strategy (adaptacja macierzy kowariancji -~strategia ewolucyjna). Jest to alorytm oparty na tehcnikach ewolucyjnych, natomiast punkty losowane są na podstawie macierzy kowariancji, która jest w każdej iteracji dostosowywana do aktualnej sytuacji przeszukiwań.
 
-\subsubsection*{Szczegóły}
-Rola dotychczas wygenerowanych punktów
+\subsubsection{Opis algorytmu}
+Zgodnie z tym, co zostało ustalone na początku tego rozdziału, algorytm CMA-ES jest podobny do klasycznych algorytmów ewolucyjnych. Inny jest sposób generowania punktów. Można to zauważyć w poniższym, ogólnym pseudokodzie opisującym algorytm CMA-ES:
+\begin{Verbatim}[baselinestretch=1.1]
+    inicjalizuj zmienne
+    dopóki nie są spełnione warunki stopu:
+        generuj punkty
+        oblicz wartości punktów
+        przeprowadź selekcję punktów
+        oblicz wartość oczekiwaną rozkładu
+        oblicz długość kroku
+        oblicz macierz kowariancji
+\end{Verbatim}
+Ten pseudokod zaiwera kilka pojęć, które nie zostały jeszcze omówione. Ich opis znajduje się w kolejnych podrozdziałach. Nie jest on wyczerpujący. Aby dokładnie zgłębić algorytm CMA-ES oraz zapoznać się z formalnym opisem poszczególnych fragmentów warto przeczytać ------przypis------
+
+\subsubsection*{Macierz kowariancji}
+Pierwszą zmienną, która będzie opisana jest macierz kowariancji. To ona jest trzonem, a wszystkie kolejne z niej wypływają. Tak jak napisano we wstępie do tego rozdziału, algoyrt CMA-ES posiada inny sposób generowania punktów, niż klasyczne algorytmy ewolucyjne. Wszystkie punkty są generowanie poprzez losowanie na podstawie macierzy kowariancji. Oznacza to, że nie istnieje bezpośredni związek pomiędzy punktami - w~klasycznych algorytmach ewolucyjych zazwyczaj można było mówić o rodzicach nowo wygenerowanego punktu.\\
+Rola dotychczas wygenerowanych punktów jest jednak istotna w algorytmie CMA-ES. Mają one wpływ na adaptację macierzy kowariancji. Odbywa się to w następujący sposób: z populacji punktów wybiera się $\mu$ punktów (zazwyczaj połowę), która zwraca lepsze wartości funkcji celu. Następnie przypisuje się im wagi - w zależności od tego, jak dobry jest punkt. Na postawie tych danych wyznaczana jest empiryczna macierz kowariancji.
+
+\subsubsection*{Wartość oczekiwana rozkładu}
+Punkty generowane są na podstawie rozkładu określonego macierzą kowariancji wokół wartości oczekiwanej. Sama nie mówi jednak nic o wartości oczekiwanej. Wymaga to oddzielnego wyznaczenia tej wartości.\\
+Podobnie, jak w macierzy kowariancji wybiera się $\mu$ punktów. Dla tych punktów wybiera się średnią ważoną. Ta średnia jest nową wartością oczekiwaną.
+
+\subsubsection*{Długość kroku}
+Generowanie punktów z macierzy kowariancji pozwala na skalowanie tego rozkładu przez dodanie jednego parametru. Ten parametr jest nazywany długością kroku. W~algorytmie CMA-ES jest na podstawie kierunku przemieszczania się wartości oczekiwanej rozkładu. Długość kroku zwiększa się, gdy wartość oczekiwana przemieszcza się w tym samym kierunku Skraca natomiast, gdy kierunek jest zmienny.
+
+\subsubsection*{Generowanie punktów}
+Punkty są generowane poprzez wylosowanie wektora liczb na postawie macierzy kowariancji. Wylosowany wektor jest skalowny przez długość kroku, a na koniec jest przesuwany o wektor równy wartości oczekiwanej rozkładu.
+
+\subsubsection*{Selekcja punktów}
+Selekcja punktów, to wybór $\mu$ punktów spośród całej populacji. Wybierane są te punkty, które mają lepszą wartość funkcji. Punktom przypisywane są również wagi wykorzystywane do wyznaczania wartości oczekiwanej.
 
 \subsection{CEC 2013}
 - wybrane kilka funkcji\\
