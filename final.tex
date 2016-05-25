@@ -355,14 +355,14 @@ Rozwinięcie akronimu CME-ES podpowiada, w jaki sposób jest to realizowane: Cov
 \subsubsection{Opis algorytmu}
 Zgodnie z tym, co zostało ustalone na początku tego rozdziału, algorytm CMA-ES jest podobny do klasycznych algorytmów ewolucyjnych. Inny jest sposób generowania punktów. Można to zauważyć w poniższym, ogólnym pseudokodzie opisującym algorytm CMA-ES:
 \begin{Verbatim}[baselinestretch=1.1]
-inicjalizuj zmienne
-dopóki nie są spełnione warunki stopu:
-generuj punkty
-oblicz wartości punktów
-przeprowadź selekcję punktów
-oblicz wartość oczekiwaną rozkładu
-oblicz długość kroku
-oblicz macierz kowariancji
+	inicjalizuj zmienne
+	dopóki nie są spełnione warunki stopu:
+		generuj punkty
+		oblicz wartości punktów
+		przeprowadź selekcję punktów
+		oblicz wartość oczekiwaną rozkładu
+		oblicz długość kroku
+		oblicz macierz kowariancji
 \end{Verbatim}
 Ten pseudokod zawiera kilka pojęć, które nie zostały jeszcze omówione. Ich opis znajduje się w kolejnych podrozdziałach.
 
