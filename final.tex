@@ -6,6 +6,7 @@
 \newcommand{\degree}{\ensuremath{^\circ}}
 \newcommand{\hilight}[1]{\colorbox{yellow}{#1}}
 \linespread{1.5}
+\newcommand{\CMAES}{\mbox{CMA-ES}}
 \DeclareUnicodeCharacter{00A0}{~}
 
 %------------------------------------------------------------------------------%
@@ -45,17 +46,17 @@
 \pagebreak
 
 \section{Techniki uwzględniania ograniczeń}
-Niektóre problemy optymalizacyjne posiadają ograniczenia. Szukając rozwiązania należy zapewnić, że będzie ono dopuszczalne. Bazując na ------przypis------ techniki uwzględniania ograniczeń można podzielić w następujący sposób:
+Niektóre problemy optymalizacyjne posiadają ograniczenia. Szukając rozwiązania należy zapewnić, że będzie ono dopuszczalne. Bazując na \cite{wyklady} techniki uwzględniania ograniczeń można podzielić ze względu na wykorzystanie:
 \begin{itemize}[noitemsep]
-\item definicja przestrzeni przeszukiwań - zapewnienie, że podczas krzyżowań, mutacji i innych zmian punktów, żaden z punktów nie wypadnie poza przestrzeń przeszukiwań,
-\item modyfikacja funkcji celu - zmienienie funkcji celu tak, aby funkcja celu dla punktów spoza ograniczeń zwracały gorsze wyniki,
-\item transformacja rozwiązań - punkty, które są poza ograniczeniami zostają zamieniane na punkty, które znajdują się w ograniczeniach.
+\item definicji przestrzeni przeszukiwań - zapewnienie, że podczas krzyżowań, mutacji i innych zmian punktów, żaden z punktów nie wypadnie poza przestrzeń przeszukiwań,
+\item modyfikacji funkcji celu - zmienienie funkcji celu tak, aby funkcja celu dla punktów spoza ograniczeń zwracały gorsze wyniki,
+\item transformacji rozwiązań - punkty, które są poza ograniczeniami zostają zamieniane na punkty, które znajdują się w ograniczeniach.
 \end{itemize}
 
 W tej pracy skupiono się na transformacji rozwiązań.
 
 \subsection{Transformacje rozwiązań} \label{transformacje}
-Istnieje wiele technik transformacji rozwiązań spoza ograniczeń na dopuszczalne. W~kolejnych podrozdziałach znajdują się metody transformacji rozwiązań, które zostały zbadane. Każda z technik jest opisana słownie oraz pseudokodem. Opis słowny zawiera wyjaśnienie, co się dzieje z punktem, który znalazł się poza ograniczeniem. W~pseudokodzie zastosowano następujące oznaczenia:
+Istnieje wiele technik transformacji rozwiązań spoza ograniczeń na dopuszczalne. W~kolejnych podrozdziałach znajdują się metody transformacji rozwiązań, które były badane na potrzeby tej pracy. Każda z technik jest opisana słownie oraz pseudokodem. Opis słowny zawiera wyjaśnienie, co się dzieje z punktem, który znalazł się poza ograniczeniem. W~pseudokodzie zastosowano następujące oznaczenia:
 \begin{itemize}[noitemsep]
 \item $x$ - punkt, który poddajemy naprawie
 \item $x'$ - rodzic punktu $x$, czyli z punktu $x'$ z zadanym rozkładem został wygenerowany punkt $x$
@@ -73,7 +74,7 @@ Nowy punkt zostaje odrzucony i wraca do poprzedniej pozycji.
 
 
 \subsubsection{Rzutowanie}
-Punkt jest transformowany do najbliższego punktu, który spełnia ograniczenie. Oznacza to, że dla każdej współrzędnej sprawdzany jest warunek zawierania się w ograniczeniach. Dla współrzędnych, dla których nie jest on spełniony, wartość jest zamieniana na wartość ograniczenia (dolnego lub górnego), które jest najbliżej.
+Punkt jest transformowany do najbliższego punktu, który spełnia ograniczenie. Oznacza to, że dla każdej współrzędnej sprawdzany jest warunek zawierania się w ograniczeniach. Wartości współrzędnych, dla których nie jest on spełniony, zmieniane są na wartości ograniczeń (odpowiednio dolne lub górne), które są najbliżej.
 
 \begin{Verbatim}[baselinestretch=1.1]
 	dla każdej współrzędnej i
@@ -84,22 +85,10 @@ Punkt jest transformowany do najbliższego punktu, który spełnia ograniczenie.
 \end{Verbatim}
 
 \subsubsection{Reinicjacja}
-Punkt jest przenoszony do pozycji początkowej. W tej pracy był to jednocześnie środek układu współrzędnych oraz środek symetrii ograniczeń.
+Punkt jest przenoszony do pozycji początkowej.
 
 \begin{Verbatim}[baselinestretch=1.1]
 	x = x0
-\end{Verbatim}
-
-
-\subsubsection{Odbicie}
-Dla każdej współrzędnej sprawdzane są warunki na ograniczenie. W przapadku współrzędnych, na których punkt jest poza ograniczeniem, wartość punktu tej współrzędnej jest symetrycznie odbita względem ograniczenia, którego warunek został złamany.
-
-\begin{Verbatim}[baselinestretch=1.1]
-	dla każdej współrzędnej i
-		jeżeli lb(i) > x(i)
-			x(i) = x(i) + 2 * (lb(i) - x(i))
-		jeżeli ub(i) < x(i)
-			x(i) = x(i) - 2 * (x(i) - ub(i))
 \end{Verbatim}
 
 \subsubsection{Próbkowanie}
@@ -111,7 +100,7 @@ Punkt jest powtórnie generowany do momentu, aż spełni ograniczenie kostkowe.
 \end{Verbatim}
 
 \subsubsection{Zawijanie}
-Dla każdej współrzędnej sprawdzane są warunki na ograniczenie. W przypadku współrzędnych, na których punkt jest poza ograniczeniem, różnica, pomiędzy ograniczeniem a wartością współrzędnej punktu, jest zapamiętywana. Tę różnicę odkładamy na przeciwległym ograniczeniu po stronie, która jest wewnątrz ograniczenia. W tym miejscu znajduje się nowa wartość współrzędnej punktu. W intuicyjny sposób można to wyjaśnić tak, że dla punktów nie ma ograniczeń, a przestrzeń przeszukiwań po każdym wymiarze jest jakby "zawinięta".
+Dla każdej współrzędnej sprawdzane są warunki na ograniczenie. W przypadku współrzędnych, na których punkt jest poza ograniczeniem, różnica pomiędzy ograniczeniem a wartością współrzędnej punktu jest zapamiętywana. Tę różnicę odkładamy na przeciwległym ograniczeniu po stronie, która jest wewnątrz ograniczenia. W tym miejscu znajduje się nowa wartość współrzędnej punktu. W intuicyjny sposób można to wyjaśnić tak, że dla punktów nie ma ograniczeń, a przestrzeń przeszukiwań po każdym wymiarze jest jakby "zawinięta".
 
 \begin{Verbatim}[baselinestretch=1.1]
 	dla każdej współrzędnej i
@@ -121,9 +110,20 @@ Dla każdej współrzędnej sprawdzane są warunki na ograniczenie. W przypadku 
 			x(i) = lb(i) + (x(i) - ub(i))
 \end{Verbatim}
 
+\subsubsection{Odbicie}
+Dla każdej współrzędnej sprawdzane są warunki na ograniczenie. W przypadku współrzędnych, na których punkt jest poza ograniczeniem, wartość punktu tej współrzędnej jest symetrycznie odbita względem ograniczenia, którego warunek został złamany.
+
+\begin{Verbatim}[baselinestretch=1.1]
+	dla każdej współrzędnej i
+		jeżeli lb(i) > x(i)
+			x(i) = x(i) + 2 * (lb(i) - x(i))
+		jeżeli ub(i) < x(i)
+			x(i) = x(i) - 2 * (x(i) - ub(i))
+\end{Verbatim}
+
 \subsection{Błądzenie przypadkowe} \label{bladzenie}
 
-Można się spodziewać, że algorytm CMA-ES dla funkcji stałej będzie zachowywał się analogicznie do błądzenia przypadkowego. Takie założenie skłoniło autora, żeby zbadać błądzenie przypadkowe z ograniczeniami. Błądzenie przypadkowe jest algorytmem dużo prostszym, niż CMA-ES, więc umożliwia szybsze testowanie i wyciąganie wniosków.\\
+Można się spodziewać, że algorytm CMA-ES dla funkcji stałej będzie zachowywał się analogicznie do błądzenia przypadkowego. Takie założenie skłoniło autora, żeby zbadać błądzenie przypadkowe z ograniczeniami. Błądzenie przypadkowe jest algorytmem prostszym niż CMA-ES, więc umożliwia szybsze testowanie i wyciąganie wniosków.\\
 Niech $ X_1, X_2, ... $ będą niezależnymi n-wymiarowymi zmiennymi losowymi o wartości oczekiwanej równej $ [0]^n $. Błądzeniem przypadkowym nazywamy sekwencję punktów $S_1$, $S_2$, ..., takich że:
 
 \begin{equation}
@@ -133,7 +133,7 @@ S_1 = X_1, S_i=S_{i-1}+X_i
 Zmienne losowe mogą być realizowane w różny sposób. Mogą to być wektory o rozkładzie normalnym, jednostajnym lub innym.
 
 \subsection{Metoda przeprowadzania testów}
-Celem testów jest zaobserwowanie, jaki wpływ na symulację ma metoda uwzględniania ograniczeń. Wybrano 2 cechy, które miały być przetestowane:
+Celem testów jest zaobserwowanie, jaki wpływ na symulację ma metoda uwzględniania ograniczeń. Do tak postawionego celu można podejśc na różne sposby. Wybrano 2 cechy, które miały najlepiej zrealizować cel:
 \begin{enumerate}
 \item Wartość oczekiwana generowanego punktu (razem z poprawą).
 \item Rozkład prawdopodobieństwa generowanych punktów.
@@ -142,21 +142,21 @@ Celem testów jest zaobserwowanie, jaki wpływ na symulację ma metoda uwzględn
 Sposoby testowania obu cech są opisane w kolejnych podrozdziałach.
 
 \subsubsection{Wartość oczekiwana generowanego punktu}
-Błądzenie przypadkowe jest dobrze określone. W tym algorytmie wartością oczekiwaną losowanej liczby $X_i$ jest 0. Implikuje to fakt, że wartością oczekiwaną $S_i$ jest $S_{i-1}$. Dodanie ograniczeń kostkowych powoduje, że nadal losojuemy liczbę $X_i$, której wartość oczekiwana jest równa 0. Dodajemy jednak metody naprawy. W związku z tym nie zawsze wartością oczekiwaną $S_i$ jest $S_{i-1}$.\\
+Błądzenie przypadkowe jest dobrze określone. W tym algorytmie wartością oczekiwaną losowanej liczby $X_i$ jest 0. Implikuje to fakt, że wartością oczekiwaną $S_i$ jest $S_{i-1}$. Ustalenie ograniczeń kostkowych powoduje, że nadal losujemy liczbę $X_i$, której wartość oczekiwana jest równa 0. Dodajemy jednak metody naprawy. W związku z tym wartością oczekiwaną $S_i$ nie zawsze jest $S_{i-1}$.\\
 Dla każdego punktu $p$ przestrzeni przeszukiwań można przypisać wektor $\overrightarrow{d}$. Początek $\overrightarrow{d}$ znajduje się w $p$. Załóżmy teraz, że $p$ jest punktem $S_i$ pewnego błądzenia przypadkowego z ograniczeniami. Koniec wektora $\overrightarrow{d}$ znajduje się w wartości oczekiwanej punktu $S_{i+1}$.\\
 Wykres, który będzie zawierał wektory $\overrightarrow{d}$, pozwoli na określenie charakterystyki przemieszczania się punktów w poszczególnych częściach przestrzeni przeszukiwań.\\
 
 \subsubsection*{Implementacja}
-Do wizualizacji wybrano symulację, w której punkty posiadają 2 wymiary. Pozwala to na przejrzystą wizualizację wektorów dla każdego z punktów. Pokazuje też zachowanie się wektorów w rogach - punktach, które są blisko ograniczeń.\\
-Dla obu wymiarów wybrano kilkanaście, równoodległych punktów. W skład tych punktów wchodziły też punkty znajdujące się na ograniczeniach. Następnie stworzono 2 pętle po tych punktach (jedna zagnieżdżona w drugiej). W ten sposób uzyskano regularnie rozłożone punkty w dwóch wymiarach.\\
-Dla każdego z tych punktów przeprowadzono następujące obliczenia. 1000 razy zasymulowano krok algorytmu błądzenia przypadkowego (z rozkładem normalnym) z odpowiednią naprawą. Otrzymano tysiąc punktów, z których następnie obliczono średnią arytmetyczną. Tak uzyskany punkt potraktowano jako wartość oczekiwaną i wyrysowano wektor $\overrightarrow{d}$.
+Do wizualizacji wybrano symulację, w której punkty posiadają 2 wymiary. Pozwala to na przejrzystą wizualizację wektorów dla każdego z punktów. Pokazuje też zachowanie wektorów w rogach - punktach, które są blisko ograniczeń.\\
+Dla każdego z 2 wymiarów wybrano kilkanaście, równoodległych punktów. W skład tych punktów wchodziły też punkty znajdujące się na ograniczeniach. Następnie stworzono 2 pętle po tych punktach (jedna zagnieżdżona w drugiej). W ten sposób uzyskano regularnie rozłożone punkty w dwóch wymiarach.\\
+Dla każdego z tych punktów przeprowadzono następujące obliczenia. 1000 razy uruchomiono symulację jednego kroku algorytmu błądzenia przypadkowego (z rozkładem normalnym) z odpowiednią naprawą. Otrzymano tysiąc punktów, z których następnie obliczono średnią arytmetyczną. Tak uzyskany punkt potraktowano jako wartość oczekiwaną i wyrysowano wektor $\overrightarrow{d}$.
 
 \subsubsection{Rozkład prawdopodobieństwa generowanych punktów}
 Punkty w błądzeniu przypadkowym poruszają się chaotycznie. Ta losowość jest częściowo uporządkowana na ograniczeniach. W zależności od metody naprawy, punkty zachowują się inaczej, a rozkład prawdopodobieństwa jest zniekształcony. Autor postanowił przyjrzeć się jak wygląda rozkład prawdopodobieństwa wystąpienia punktu z~perspektywy całej symulacji.\\
-Dla każdej metody naprawy opisanej w \ref{transformacje} jednokrotnie uruchomiono algorytm błądzenia przypadkowego jednego punktu. Symulowano oddzielnie również błądzenie z rozkładem normalnym oraz jenostajnym na przedziale $[-0.5; 0.5]$ (przedział co najmniej kilkukrotnie krótszy od ograniczeń kostkowych). Po każdej iteracji nowo wygenerowany punkt zapisywano w tablicy. Z tak przygotowanej tablicy generowano histogram.
+Dla każdej metody naprawy opisanej w \ref{transformacje} jednokrotnie uruchomiono algorytm błądzenia przypadkowego jednego punktu. Oddzielnie symulowano również błądzenie z rozkładem normalnym oraz jenostajnym na przedziale $[-0.5; 0.5]$ (przedział co najmniej kilkukrotnie krótszy od ograniczeń kostkowych). Po każdej iteracji nowo wygenerowany punkt zapisywano w tablicy. Z tak przygotowanej tablicy generowano histogram.
 
 \subsubsection*{Implementacja}
-Dla każdej z metod naprawy  przygotowano oddzielny skrypt. Pseudokod skryptu zamiszczono poniżej.
+Dla każdej z metod naprawy przygotowano oddzielny skrypt. Pseudokod skryptu zamieszczono poniżej.
 \begin{Verbatim}[baselinestretch=1.1]
 	x - błądzący punkt
 	punkty - tablica wszystkich położeń punktu x
@@ -172,11 +172,11 @@ Dla każdej z metod naprawy  przygotowano oddzielny skrypt. Pseudokod skryptu za
 \end{Verbatim}
 
 \subsection{Wyniki testów}
-Wykresy zamieszczone w tym podrozdziale są histogramami wystąpień punktu. Symulacje skryptów były uruchamiane z liczbą iteracji wynoszącą 2-100 milionów. Szerokość przedziałów na wykresach jest różna i była dobierana tak, aby jak najlepiej przedstawić interesujące fakty.\\
-Wszystkie wykresy, które pokazdują wyniki błądzenia przypadkowego w dwóch wymiarach zostały przetworzone w następujący sposób: otrzymane wyniki symulacji powielono poprzez symetrzyczne odbicie ich względem osi X, osi Y oraz początku układu współrzędnych. Wykonano ten zabieg, aby zwiększyć dokładność wyników. Nie wpływają one na badania, poniważ punkty 0 są środkami ograniczeń obu osi, a z perspektywy algorytmu nie ma znaczenia, w której ćwiartce znajduje się aktualnie punkt.
+Wykresy zamieszczone w tym podrozdziale są 2 rodzajów. Są to wykresy wektorów $\overrightarrow{d}$ wartości oczekiwanych oraz histogramamy wystąpień punktu.\\
+Histogramy były tworzone poprzez symulację skryptów z liczbą iteracji wynoszącą \mbox{2-100} milionów. Szerokość przedziałów jest różna i była dobierana tak, aby jak najlepiej przedstawić interesujące fakty. Wszystkie wykresy, które pokazdują wyniki błądzenia przypadkowego w dwóch wymiarach zostały przetworzone w następujący sposób: otrzymane wyniki symulacji powielono poprzez symetrzyczne odbicie ich względem osi X, osi Y oraz początku układu współrzędnych. Wykonano ten zabieg, aby zwiększyć dokładność wyników. Nie wpływają one na badania, ponieważ punkty 0 są środkami ograniczeń obu osi, a z perspektywy algorytmu nie ma znaczenia, w której ćwiartce znajduje się aktualnie punkt.
 
 \subsubsection*{Metoda klasyczna}
-Histogramy pokazują, że punkt z większym prawdopodobieństwem występuje przy ograniczeniach. Takie zachowanie można uznać za intuicyjne, ponieważ potomkowie punktów blisko granicy mogą "wypaść" poza ograniczenie. Po naprawie dziecko będzie tym samym punktem. Symulacja dwuwymiarowa nie pokazuje tego tak dokładnie, natomiast również można dostrzec ten efekt.
+Wektory wartości oczewkianych, które są blisko ograniczeń są skierowane od ograniczenia. Histogramy z kolei pokazują, że punkty z większym prawdopodobieństwem występują przy ograniczeniach. Takie zachowanie wynika z tego, że potomkowie punktów blisko granicy mogą "wypaść" poza ograniczenie. Po naprawie dziecko będzie tym samym punktem.
 
 \begin{figure}[H]
 \centering
@@ -199,7 +199,7 @@ Histogramy pokazują, że punkt z większym prawdopodobieństwem występuje przy
 \end{figure}
 
 \subsubsection*{Rzutowanie}
-Zgodnie z przewidywaniami największe prawdopodobieństwo wystąpienia punktu jest na ograniczeniu, co bardzo dobrze obrazuje rysunek \ref{bladzenie:rzutowanie2d}. Na rysunkach \ref{bladzenie:rzutowanie1dn} i \ref{bladzenie:rzutowanie1dj} zakres osi~Y został zmniejszony do odpowiednio $[30000;60000]$ oraz $[70000;140000]$, aby uwypuklić interesujące efekty. W związku z tym, zostały "ucięte" wartości przedziałów brzegowych. Warto zwrócić uwagę na niespodziewane zjawisko - wartości przedziałów blisko ograniczeń są mniejsze, niż pozostałe. Oznacza to, że punkty w tych przedziałach występują z mniejszym prawdopodobieństwem, niż pozostałe. Wydawać by się mogło, że powinno być inaczej, ponieważ podczas symulacji punkty często są rzutowane na ograniczenie. Dodatkowo, w rozkładzie jednostajnym widać, że istnieją przedziały, w~których punkty występują z większym prawdopodobieństwem. Autorowi nie udało się formalnie uzasadnić tego zjawiska. Intuicja prowadzi do hipotezy, że punkty, które znalazły się poza ograniczeniem, bez naprawy po kilku iteracjach zapełniałyby "dołek". Naprawa natomiast sprawia, że cała dalsza symulacja zostaje niejako przesunięta. W~ten sposób powstaje "górka" w~rozkładzie jednostajnym. Z charakterystyki rozkładu normalnego może brać się fakt, iż owa górka w nim nie występuje.
+Zgodnie z przewidywaniami największe prawdopodobieństwo wystąpienia punktu jest na ograniczeniu, co bardzo dobrze obrazuje rysunek \ref{bladzenie:rzutowanie2d}. Na rysunkach \ref{bladzenie:rzutowanie1dn} i \ref{bladzenie:rzutowanie1dj} zakres osi~Y został zmniejszony do odpowiednio $[30000;60000]$ oraz $[70000;140000]$, aby uwypuklić interesujące efekty. W związku z tym, wartości przedziałów brzegowych nie są widoczne - były o kilka rzędów wielkości większe od pozostałych wartości. Warto zwrócić uwagę na niespodziewane zjawisko - wartości przedziałów blisko ograniczeń są mniejsze, niż pozostałe. Oznacza to, że punkty w tych przedziałach występują z mniejszym prawdopodobieństwem, niż pozostałe. Wydawać by się mogło, że powinno być inaczej, ponieważ podczas symulacji punkty często są rzutowane na ograniczenie. Dodatkowo, w rozkładzie jednostajnym widać, że istnieją przedziały, w~których punkty występują z większym prawdopodobieństwem. Autorowi nie udało się formalnie uzasadnić tego zjawiska. Intuicja prowadzi do hipotezy, że punkty, które znalazły się poza ograniczeniem, bez naprawy po kilku iteracjach zapełniałyby "dołek". Naprawa natomiast sprawia, że cała dalsza symulacja zostaje niejako przesunięta. W~ten sposób powstaje "górka" w~rozkładzie jednostajnym. Brak górki w rozkładzie normalnym można tłumaczyć charakterystyką samego rozkładu - spadek prawdopodobieństwa wraz z oddalaniem się od wartości oczekiwanej.
 
 \begin{figure}[H]
 \centering
@@ -229,9 +229,10 @@ Zgodnie z przewidywaniami największe prawdopodobieństwo wystąpienia punktu je
 \end{figure}
 
 \subsubsection*{Reinicjacja}
-Na pierwszy rzut oka wykresy nie ukazują nic nadzwyczajnego, ponieważ łatwo zauważyć pik związany z reinicjacją oraz wartości histogramu malejące wraz ze zbliżaniem się do ograniczeń. Warto jednak zwrócić uwagę na 2 fakty.\\
-Pierwsze spostrzeżenie, to kształt histogramu. Zarówno dla rozkładu jednostajnego, jak i normalnego w jednym wymiarze jest on stożkowy. Łuk można zauważyć tylko blisko punktu środkowego, w pozostałej części spadek jest liniowy. Brakuje charakterystycznego, gaussowskiego przegięcia. Sytuacja jest ciekawsza, gdy występuje więcej wymiarów. Widać wówczas przegięcie. Dokładniejsze badania pokazały, że przegięcie nie występuje tylko na jednym wymiarze - tym, który jest relatywnie najkrótszy. Celowo jest użyte słowo relatywnie, ponieważ z~perspektywy błądzenia przypadkowego i~rozkładu normalnego trzeba brać pod uwagę parametr $\sigma$. Wymiary o małym $\sigma$ będą relatywnie dłuższe od tych z dużym $\sigma$, ponieważ błądzenie będzie wykonywało mniejsze kroki.\\
-Na rysunku \ref{bladzenie:probkowanie1dj} można dostrzec też dwa uskoki, które związane są z pikiem w punkcie~$0$ oraz charakterystyką rozkładu.
+Wykres wartości oczekiwanych jest mało czytelny, ponieważ wartości przesunięć są duże. Ma w tym udział reinicjacja, która przesuwa część punktów na środek przestrzeni przeszukiwań.\\
+Histogramy nie ukazują nic nadzwyczajnego, ponieważ łatwo zauważyć pik związany z reinicjacją oraz wartości histogramu malejące wraz ze zbliżaniem się do ograniczeń. Warto jednak zwrócić uwagę na 2 fakty.\\
+Pierwsze spostrzeżenie, to kształt histogramu. Zarówno dla rozkładu jednostajnego, jak i normalnego w jednym wymiarze jest on stożkowy. Łuk można zauważyć tylko blisko punktu środkowego, w pozostałej części spadek jest liniowy. Brakuje charakterystycznego, gaussowskiego przegięcia. Sytuacja jest ciekawsza, gdy występuje więcej wymiarów. Widać wówczas przegięcie (Rysunek \ref{bladzenie:reinicjacja2ds}). Dokładniejsze badania pokazały, że przegięcie nie występuje tylko na jednym wymiarze - tym, który jest relatywnie najkrótszy. Celowo jest użyte słowo relatywnie, ponieważ z~perspektywy błądzenia przypadkowego i~rozkładu normalnego trzeba brać pod uwagę parametr $\sigma$ - odchylenie standardowe. Wymiary o małym $\sigma$ będą relatywnie dłuższe od tych z dużym $\sigma$, ponieważ błądzenie będzie wykonywało mniejsze kroki.\\
+Na rysunku \ref{bladzenie:reinicjacja1dj} można dostrzec też dwa uskoki, które związane są z pikiem w punkcie~$0$ oraz charakterystyką rozkładu jednostajnego.
 
 \begin{figure}[H]
 \centering
@@ -249,6 +250,7 @@ Na rysunku \ref{bladzenie:probkowanie1dj} można dostrzec też dwa uskoki, któr
 \centering
 \includegraphics[width=\textwidth]{ri_j_20M_1__3_3}
 \caption{Rozkład prawdopodobieństwa punktów; 1 wymiar; generowanie z rozkładem jednostajnym}
+\label{bladzenie:reinicjacja1dj}
 \end{figure}
 
 \begin{figure}[H]
@@ -261,6 +263,7 @@ Na rysunku \ref{bladzenie:probkowanie1dj} można dostrzec też dwa uskoki, któr
 \centering
 \includegraphics[width=\textwidth]{ri_n_10M_2__20_20__10_10_4_1D}
 \caption{Rozkład prawdopodobieństwa punktów; 2 wymiary; generowanie z rozkładem normalnym; oddzielne histogramy dla obu wymiarów}
+\label{bladzenie:reinicjacja2ds}
 \end{figure}
 
 \subsubsection*{Próbkowanie}
@@ -287,7 +290,8 @@ Ten rozkład charakteryzuje się spadkiem wartości prawdopodobieństwa wraz ze 
 \end{figure}
 
 \subsubsection*{Zawijanie}
-Wyobraźmy sobie, że naszą symulację przeprowadzamy bez ograniczeń, następnie wykres z wynikami tniemy w równych odstępach wzdłuż każdej osi. Na koniec tak pocięte części łączymy w jeden wykres. Takie zachowanie symuluje zawijanie. W związku z tym nie dziwi fakt, że poniższe histogramy przedstawiają rozkład jednostajny z szumem.
+Wykres przesunięć wartości oczekiwanych jest bardzo nieczytelny. Jest to implikacji dużych przesunięć punktów - te, które znajdą się poza ograniczeniem, wędrują na drugą stronę wykresu.\\
+Uzasadniając wykresy histogramów warto wyobrazić sobie, że symulacja przeprowadzana jes bez ograniczeń, a następnie wykres z wynikami przecinany jest w równych odstępach wzdłuż każdej osi. Na koniec tak pocięte części łączone są w jeden wykres. Takie zachowanie symuluje zawijanie. W związku z tym nie dziwi fakt, że histogramy przedstawiają rozkład jednostajny z szumem.
 
 \begin{figure}[H]
 \centering
@@ -304,7 +308,8 @@ Wyobraźmy sobie, że naszą symulację przeprowadzamy bez ograniczeń, następn
 \end{figure}
 
 \subsubsection*{Odbicie}
-Podobnie jak zawijanie, odbicie zwraca histogram rozkładu normalnego z szumem. W~tej sytuacji nieco trudniej o analogię, lecz po chwili zastanowienia nie dziwi kształt poniższych wykresów.
+Podobnie jak zawijanie, odbicie zwraca histogram rozkładu normalnego z szumem. W~tej sytuacji nieco trudniej o analogię, lecz po chwili zastanowienia nie dziwi kształt poniższych wykresów.\\
+Od zawijania różni się natomiast wykres wartości oczekiwanych, ponieważ w odbiciu nie ma znaczących przesunięć punktów.
 
 \begin{figure}[H]
 \centering
@@ -320,11 +325,6 @@ Podobnie jak zawijanie, odbicie zwraca histogram rozkładu normalnego z szumem. 
 \caption{Rozkład prawdopodobieństwa punktów;}
 \end{figure}
 
-\subsection{Test przesunięć}
-Dodatkowo został wykonany test, w którym badano wartość oczekiwaną przesunięcia punktu w kolejnej iteracji (razem z naprawą). Dla każdej z metod wyglądał on podobnie:
-
-Jedynie dla zawijania oraz reinicjacji długości wektorów były znacząco większe. W pozostałych zmieniał się kierunek oraz długość wektora. Były to jednak zmiany wynikające pośrednio z pokazanych wcześniej histogramów.
-
 \subsection{Wnioski}
 Techniki uwzględniania ograniczeń mają swoje charakterystyczne cechy. W większości metod zachowanie pojedynczej cząsteczki przekłada się na globalne zachowanie całego algorytmu. Testy pokazały cechy, które nie były oczywiste podczas prostej analizy algorytmów.\\
 Z perspektywy algorytmu CMA-ES warto zwrócić uwagę przede wszystkim na metody zawijania i reinicjacji. W tych metodach wartości oczekiwane punktów znajdują się daleko od rodzica. Oznacza to, że w algorytmie CMA-ES macierz kowariancji może znacząco się zniekształcać.
@@ -332,13 +332,17 @@ Z perspektywy algorytmu CMA-ES warto zwrócić uwagę przede wszystkim na metody
 \pagebreak
 
 \section{Metodyka testowania metod optymalizacji globalnej}
-Funkcje posiadają charakterystyczne cechy, m.in. monotoniczność, liczba ekstremów, ciągłość. Metody optymalizacji globalnej również posiadają swoje charakterystyczne własności. W zależności od przypadku, wymagania stawiane algorytmowi mogą być różne: szybkości działania, przeszukanie całej przestrzeni, czy też dokładne określenie ekstremum. Połączenie tego wszystkiego powoduje, że trudno jednoznacznie okreslić, która metoda optymalizacji jest najlepsza. Warto jednak posiadać wiedzę w których przypadkach metoda przynosi lepsze rezultaty.\\
-Zapewne zgodziliby się z tym stwierzeniem twócy konkursów takich jak CEC, czy BBOB. Tworzą oni szereg funkcji benchmarkowych, które mają na celu emiprycznie pokazać silne i słabe strony algorytmów w konkretnych sytuacjach.
+Funkcje posiadają charakterystyczne cechy, m.in. monotoniczność, liczba ekstremów, ciągłość. Metody optymalizacji globalnej również posiadają swoje charakterystyczne własności. W zależności od przypadku, wymagania stawiane algorytmowi mogą być różne: szybkości działania, przeszukanie całej przestrzeni, czy też dokładne określenie ekstremum. Połączenie tego wszystkiego powoduje, że trudno jednoznacznie określić, która metoda optymalizacji jest najlepsza. Warto jednak posiadać wiedzę w których przypadkach metoda przynosi lepsze rezultaty.\\
+Zapewne zgodziliby się z tym stwierdzeniem twórcy konkursów takich jak CEC, czy BBOB. Tworzą oni szereg funkcji benchmarkowych, które mają na celu empirycznie pokazać silne i słabe strony algorytmów w konkretnych sytuacjach.
 
 \subsection{Funkcje benchmarkowe}
 Funkcje benchmarkowe, to złożone furnkcje. Skomplikowanie polega między innymi na wielu ekstremach funkcji lub specyficznym umieszczeniu minimum globalnego. Dzięki nim można porównać algorytmy.
 
 \subsection{Techniki porównywania wyników}
+Wybranie funkcji benchmarkowych nie wystarczy, aby stwierdzić który z algoryrytmów ewolucyjnych jest lepszy. Sa to algorytmy niedeterministyczne - poszukiwanie rozwiązania za każdym razem będzie wyglądało inaczej nawet przy takich samych parametrach. Oznacz to, że dla wiarygodności wyników należy testy uruchamiać wielokrotnie. Posiadając takie wyniki należy posłużyć się wybraną metodą, aby porównać skuteczność algorytmów. W tej pracy do porównywania został wybrany test Wilcoxona, ponieważ można go użyć do porównywania par obserwacji oraz ten test pokazuje różnice cech.
+
+\subsubsection{Test Wilcoxona}
+Ten test bazuje na teście t-Studenta i sprawdza, czy istnieje statycznie istotna różnica mięedzy dwoma zbiorami. Jest on jednak inaczej realizowany, a hipoteza dotyczy median. Hipoteza zerowa $H_0$ brzmi "Różnica median zbiorów wynosi 0". \cite{wilcox}
 
 \pagebreak
 
@@ -351,39 +355,80 @@ Rozwinięcie akronimu CME-ES podpowiada, w jaki sposób jest to realizowane: Cov
 \subsubsection{Opis algorytmu}
 Zgodnie z tym, co zostało ustalone na początku tego rozdziału, algorytm CMA-ES jest podobny do klasycznych algorytmów ewolucyjnych. Inny jest sposób generowania punktów. Można to zauważyć w poniższym, ogólnym pseudokodzie opisującym algorytm CMA-ES:
 \begin{Verbatim}[baselinestretch=1.1]
-    inicjalizuj zmienne
-    dopóki nie są spełnione warunki stopu:
-        generuj punkty
-        oblicz wartości punktów
-        przeprowadź selekcję punktów
-        oblicz wartość oczekiwaną rozkładu
-        oblicz długość kroku
-        oblicz macierz kowariancji
+inicjalizuj zmienne
+dopóki nie są spełnione warunki stopu:
+generuj punkty
+oblicz wartości punktów
+przeprowadź selekcję punktów
+oblicz wartość oczekiwaną rozkładu
+oblicz długość kroku
+oblicz macierz kowariancji
 \end{Verbatim}
-Ten pseudokod zaiwera kilka pojęć, które nie zostały jeszcze omówione. Ich opis znajduje się w kolejnych podrozdziałach. Nie jest on wyczerpujący. Aby dokładnie zgłębić algorytm CMA-ES oraz zapoznać się z formalnym opisem poszczególnych fragmentów warto przeczytać ------przypis------
+Ten pseudokod zawiera kilka pojęć, które nie zostały jeszcze omówione. Ich opis znajduje się w kolejnych podrozdziałach.
 
 \subsubsection*{Macierz kowariancji}
-Pierwszą zmienną, która będzie opisana jest macierz kowariancji. To ona jest trzonem, a wszystkie kolejne z niej wypływają. Tak jak napisano we wstępie do tego rozdziału, algoyrt CMA-ES posiada inny sposób generowania punktów, niż klasyczne algorytmy ewolucyjne. Wszystkie punkty są generowanie poprzez losowanie na podstawie macierzy kowariancji. Oznacza to, że nie istnieje bezpośredni związek pomiędzy punktami - w~klasycznych algorytmach ewolucyjych zazwyczaj można było mówić o rodzicach nowo wygenerowanego punktu.\\
+Pierwszą zmienną, która będzie opisana jest macierz kowariancji. Tak jak napisano we wstępie do tego rozdziału, algorytm CMA-ES posiada inny sposób generowania punktów, niż klasyczne algorytmy ewolucyjne. Wszystkie punkty są generowanie poprzez losowanie na podstawie macierzy kowariancji. Oznacza to, że nie istnieje bezpośredni związek pomiędzy punktami - w~klasycznych algorytmach ewolucyjych zazwyczaj można było mówić o rodzicach nowo wygenerowanego punktu.\\
 Rola dotychczas wygenerowanych punktów jest jednak istotna w algorytmie CMA-ES. Mają one wpływ na adaptację macierzy kowariancji. Odbywa się to w następujący sposób: z populacji punktów wybiera się $\mu$ punktów (zazwyczaj połowę), która zwraca lepsze wartości funkcji celu. Następnie przypisuje się im wagi - w zależności od tego, jak dobry jest punkt. Na postawie tych danych wyznaczana jest empiryczna macierz kowariancji.
 
 \subsubsection*{Wartość oczekiwana rozkładu}
-Punkty generowane są na podstawie rozkładu określonego macierzą kowariancji wokół wartości oczekiwanej. Sama nie mówi jednak nic o wartości oczekiwanej. Wymaga to oddzielnego wyznaczenia tej wartości.\\
-Podobnie, jak w macierzy kowariancji wybiera się $\mu$ punktów. Dla tych punktów wybiera się średnią ważoną. Ta średnia jest nową wartością oczekiwaną.
+Punkty generowane są na podstawie rozkładu określonego macierzą kowariancji wokół wartości oczekiwanej. Sama macierz nie mówi jednak nic o wartości oczekiwanej. Wymaga to oddzielnego wyznaczenia tej wartości.\\
+Podobnie jak w macierzy kowariancji, wybiera się $\mu$ punktów. Dla tych punktów obliczana jest średnia ważona. Ta średnia jest nową wartością oczekiwaną.
 
 \subsubsection*{Długość kroku}
-Generowanie punktów z macierzy kowariancji pozwala na skalowanie tego rozkładu przez dodanie jednego parametru. Ten parametr jest nazywany długością kroku. W~algorytmie CMA-ES jest na podstawie kierunku przemieszczania się wartości oczekiwanej rozkładu. Długość kroku zwiększa się, gdy wartość oczekiwana przemieszcza się w tym samym kierunku Skraca natomiast, gdy kierunek jest zmienny.
+Generowanie punktów z macierzy kowariancji pozwala na skalowanie tego rozkładu poprzez dodanie jednego parametru. Ten parametr jest nazywany długością kroku. W~algorytmie CMA-ES dlugość kroku obliczana jest na podstawie kierunku przemieszczania się wartości oczekiwanej rozkładu. Długość kroku zwiększa się, gdy wartość oczekiwana przemieszcza się w tym samym kierunku Skraca natomiast, gdy kierunek jest zmienny.
 
 \subsubsection*{Generowanie punktów}
-Punkty są generowane poprzez wylosowanie wektora liczb na postawie macierzy kowariancji. Wylosowany wektor jest skalowny przez długość kroku, a na koniec jest przesuwany o wektor równy wartości oczekiwanej rozkładu.
+Punkty są generowane poprzez wylosowanie wektora liczb na postawie macierzy kowariancji. Wylosowany wektor jest skalowany przez długość kroku, a na koniec jest przesuwany o wektor równy wartości oczekiwanej rozkładu.
 
 \subsubsection*{Selekcja punktów}
 Selekcja punktów, to wybór $\mu$ punktów spośród całej populacji. Wybierane są te punkty, które mają lepszą wartość funkcji. Punktom przypisywane są również wagi wykorzystywane do wyznaczania wartości oczekiwanej.
 
+\subsection{Cel testów}
+Zrealizowanie celu całej pracy wymaga sprawdzenia, jak można usprwanić algorytm \CMAES. Trudno byłoby to zrealizować bez przetestowania samego algorytmu.\\
+Celem testów będzie sprawdzenie charakterystycznych zachowań macierzy kowariancji. Aby zrealizować ten cel zostaną przeprowadzone testy, które sprawdzają rozkład prawdopodobieństwa punktów. Porównana zostanie także skuteczność algorytmu CMA-ES w zależności od sposobu uwzględniania ograniczeń.
+
+\subsection{Metoda przeprowadzenia testów}
+Testy przeprowadzano poprzez jednokrotne uruchomienie zmodyfikowanego algotymu CMA-ES na funkcji stałej, losowej oraz kwadratowej. Modyfikacja polegała na usunięciu warunków stopu z pętli głównej algorytmu. Wynikała ona z tego, że po kilku iteracjach algorytm się zatrzymywał. Nie modyfikowano natomiast sposobu uwzględniania ograniczęń. Algorytm był przerywany po kilkuset iteracjach na podstawie logów w konsoli. Wszystkie wygenerowane przez algorytm punkty zostały przedstawione na historamie (podobnie jak przy błądzeniu przypadkowym).\\
+Do przeprowadzania testów została użyta biblioteka przygotowana przez Nikolausa Hansena, współautora algorytmu CMA-ES. Podobnie, jak w przypadku błądzenia przypadkowego, wykorzystano implementację w języku MATLAB \cite{cmaes_code}.
+
+\subsection{Wyniki testów}
+
+\subsubsection*{Funkcja stała}
+Wbrew oczekiwanion funkcja stała ma tendencje do zmniejszania kroku algorytmu, więc po kilkuset iteracjach przemieszczenia się wartości oczekiwanej jest znikome. Obrazuje to rysunek \ref{cmaes:const}. Ograniczenie narzucone na algorytm to [-3; 3] na obu wymiarach.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{cmaes-const-boundaries-dim2-start0_0}
+\caption{Histogram punktów; algorytm CMA-ES; funkcja stała; 2 wymiary}
+\label{cmaes:const}
+\end{figure}
+
+\subsubsection*{Funkcja losowa}
+Podobnie jak w przypadku funkcji losowej krok algorytmu zmniejszał się dość szybko. Na poniższym wykresie również można zauważyć punkt, do którego zbiegł algorytm.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{cmaes-rand-boundaries-dim2-start0_0}
+\caption{Histogram punktów; algorytm CMA-ES; funkcja losowa; 2 wymiary}
+\end{figure}
+
+\subsubsection*{Funkcja kwadratowa dwuwymiarowa}
+Badano funckję o wzorze $y=x_1^2+x_2^2$. Dla tej funkcji zdecydowano się zmienić ograniczenie. Wynosiło ono [0,1;3] na obu wymiarach. Początkowa wartość oczekiwana wynosiła [2;2].Wykres dla tak przyogotowanej symulacji znajduje się na rysunku \ref{cmaes:const} (oś Z została obcięta do przedziału [0;10]).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{cmaes-x2dim2-boundaries-v2}
+\caption{Histogram punktów; algorytm CMA-ES; funkcja losowa; 2 wymiary}
+\label{cmaes:x2}
+\end{figure}
+
+\subsection{Wnioski}
+Na wykresach z funkcją losową i stałą nie udało się zaobserwować żadnych efektów widocznych podczas testowania błądzenia przypadkowego. Autor nie zdecyodwał się na generowanie wykresów innych metod transformacji rozwiązań, ponieważ nie dałoby to widocznych różnic w wykresach. Zdecydowano się jednak na porównanie za pomocą funkcji CEC dwóch wariantów transformacji rozwiązań.
+
 \subsection{CEC 2013}
-- wybrane kilka funkcji\\
-- kilkukrotne powtórzenie testów\\
-- porównanie dokładności wyników i liczby iteracji
-Zgodnie z założeniami poczynionymi w rozdziale \ref{bladzenie} testy algorytmu CMA-ES powinny przynieść rezultaty zbliżone do testów błądzenia przypadkowego. Do przeprowadzania testów została użyta biblioteka przygotowana przez Nikolausa Hansena, współautora algorytmu CMA-ES. Podobnie, jak w przypadku błądzenia przypadkowego, wykorzystano implementację w języku MATLAB ---przypis---.
+- cel\\
+- które transofrmacje wybrano\\
+- porównanie dokładności wyników metodą Wilcoxona
 
 \pagebreak
 
@@ -396,6 +441,25 @@ Zgodnie z założeniami poczynionymi w rozdziale \ref{bladzenie} testy algorytmu
 \pagebreak
 
 \begin{thebibliography}{9}
+
+\bibitem{wyklady}
+\emph{Wykłady z algorytmów ewolucyjnych}, Jarosław Arabas, 2004
+
+\bibitem{wilcox}
+\emph{The Wilcoxon Signed-Rank Test}, Richard Lowry,\\http://vassarstats.net/textbook/ch12a.html
+
+\bibitem{magist}
+\emph{Różnicowa implementacja algorytmu CMAES}, Michał Bobowski, 2015
+
+\bibitem{probability}
+\emph{An Introduction to Probability Theory and its Applications, Volume II}, William Feller, 1970
+
+\bibitem{cmaes}
+\emph{Completely Derandomized Self-Adaptation in Evolution Strategies} w \emph{Evolutionary Computation}, 9(2), pp. 159-195, Nikolaus Hansen, Andreas Ostermeier, 2001
+
+\bibitem{cmaes_code}
+\emph{CMA-ES: Evolution Strategy with Covariance Matrix Adaptation for nonlinear function minimization}, Nikolaus Hansen,\\https://www.lri.fr/~hansen/cmaes\_inmatlab.html
+
 
 \end{thebibliography}
 
