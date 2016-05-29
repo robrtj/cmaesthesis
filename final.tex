@@ -45,6 +45,53 @@
 
 \pagebreak
 
+\section{Algorytm CMA-ES}
+Klasyczne algorytmy ewolucyjne nie dostosowują się do charakterystyki optymalizowanej funkcji. W większości z nich, podczas generowania punktów, rozkład prawdopodobieństwa jest stały. Z tego faktu wynika problem ustalenia parametrów przeszukiwania. Na przeciw temu wychodzi algorytm CMA-ES, który w swej idei ma dopasowywać się do badanej funkcji.\\
+Rozwinięcie akronimu CME-ES podpowiada, w jaki sposób jest to realizowane: Covariance Matrix Adaptation - Evolution Strategy (adaptacja macierzy kowariancji -~strategia ewolucyjna). Jest to alorytm oparty na tehcnikach ewolucyjnych, natomiast punkty losowane są na podstawie macierzy kowariancji, która jest w każdej iteracji dostosowywana do aktualnej sytuacji przeszukiwań.
+
+\subsection{Opis algorytmu}
+Zgodnie z tym, co zostało ustalone na początku tego rozdziału, algorytm CMA-ES jest podobny do klasycznych algorytmów ewolucyjnych. Inny jest sposób generowania punktów. Można to zauważyć w poniższym, ogólnym pseudokodzie opisującym algorytm CMA-ES:
+\begin{Verbatim}
+inicjalizuj zmienne
+dopóki nie są spełnione warunki stopu:
+	generuj punkty
+\end{Verbatim}
+\hspace{12ex} $x_k^{t+1} \sim m^t + \sigma^tN(0,C^t)$
+\begin{Verbatim}
+	oblicz wartości funkcji w wygenerowanych punktach
+	posortuj punkty
+\end{Verbatim}
+\hspace{12ex} $f(x_{1:\lambda}^{t+1}) \leq f(x_{2:\lambda}^{t+1}) \leq ... \leq f(x_{\lambda:\lambda}^{t+1})$
+\begin{Verbatim}
+	przeprowadź selekcję punktów
+	oblicz wartość oczekiwaną rozkładu
+\end{Verbatim}
+\hspace{12ex} $m^{t+1}=m^t+c_m\sum\limits_{i=1}^\mu w_i(x_{i:\lambda}^{t+1}-m^t)$
+\begin{Verbatim}
+	oblicz długość kroku
+	oblicz macierz kowariancji
+\end{Verbatim}
+Ten pseudokod zawiera kilka pojęć, które nie zostały jeszcze omówione. Ich opis znajduje się w kolejnych podrozdziałach.
+
+\subsection{Macierz kowariancji}
+Pierwszą zmienną, która będzie opisana jest macierz kowariancji. Tak jak napisano we wstępie do tego rozdziału, algorytm CMA-ES posiada inny sposób generowania punktów, niż klasyczne algorytmy ewolucyjne. Wszystkie punkty są generowanie poprzez losowanie na podstawie macierzy kowariancji. Oznacza to, że nie istnieje bezpośredni związek pomiędzy punktami - w~klasycznych algorytmach ewolucyjych zazwyczaj można było mówić o rodzicach nowo wygenerowanego punktu.\\
+Rola dotychczas wygenerowanych punktów jest jednak istotna w algorytmie CMA-ES. Mają one wpływ na adaptację macierzy kowariancji. Odbywa się to w następujący sposób: z populacji punktów wybiera się $\mu$ punktów (zazwyczaj połowę), która zwraca lepsze wartości funkcji celu. Następnie przypisuje się im wagi - w zależności od tego, jak dobry jest punkt. Na postawie tych danych wyznaczana jest empiryczna macierz kowariancji.
+
+\subsection{Wartość oczekiwana rozkładu}
+Punkty generowane są na podstawie rozkładu określonego macierzą kowariancji wokół wartości oczekiwanej. Sama macierz nie mówi jednak nic o wartości oczekiwanej. Wymaga to oddzielnego wyznaczenia tej wartości.\\
+Podobnie jak w macierzy kowariancji, wybiera się $\mu$ punktów. Dla tych punktów obliczana jest średnia ważona. Ta średnia jest nową wartością oczekiwaną.
+
+\subsection{Długość kroku}
+Generowanie punktów z macierzy kowariancji pozwala na skalowanie tego rozkładu poprzez dodanie jednego parametru. Ten parametr jest nazywany długością kroku. W~algorytmie CMA-ES dlugość kroku obliczana jest na podstawie kierunku przemieszczania się wartości oczekiwanej rozkładu. Długość kroku zwiększa się, gdy wartość oczekiwana przemieszcza się w tym samym kierunku Skraca natomiast, gdy kierunek jest zmienny.
+
+\subsection{Generowanie punktów}
+Punkty są generowane poprzez wylosowanie wektora liczb na postawie macierzy kowariancji. Wylosowany wektor jest skalowany przez długość kroku, a na koniec jest przesuwany o wektor równy wartości oczekiwanej rozkładu.
+
+\subsection{Selekcja punktów}
+Selekcja punktów, to wybór $\mu$ punktów spośród całej populacji. Wybierane są te punkty, które mają lepszą wartość funkcji. Punktom przypisywane są również wagi wykorzystywane do wyznaczania wartości oczekiwanej.
+
+\pagebreak
+
 \section{Techniki uwzględniania ograniczeń}
 Niektóre problemy optymalizacyjne posiadają ograniczenia. Szukając rozwiązania należy zapewnić, że będzie ono dopuszczalne. Bazując na \cite{wyklady} techniki uwzględniania ograniczeń można podzielić ze względu na wykorzystanie:
 \begin{itemize}[noitemsep]
@@ -326,7 +373,7 @@ Od zawijania różni się natomiast wykres wartości oczekiwanych, ponieważ w o
 \end{figure}
 
 \subsection{Wnioski}
-Techniki uwzględniania ograniczeń mają swoje charakterystyczne cechy. W większości metod zachowanie pojedynczej cząsteczki przekłada się na globalne zachowanie całego algorytmu. Testy pokazały cechy, które nie były oczywiste podczas prostej analizy algorytmów.\\
+W większości metod zachowanie pojedynczego punktu przekłada się na globalne zachowanie całego algorytmu. Testy pokazały cechy, które nie były oczywiste podczas prostej analizy algorytmów.\\
 Z perspektywy algorytmu CMA-ES warto zwrócić uwagę przede wszystkim na metody zawijania i reinicjacji. W tych metodach wartości oczekiwane punktów znajdują się daleko od rodzica. Oznacza to, że w algorytmie CMA-ES macierz kowariancji może znacząco się zniekształcać.
 
 \pagebreak
@@ -336,52 +383,17 @@ Funkcje posiadają charakterystyczne cechy, m.in. monotoniczność, liczba ekstr
 Zapewne zgodziliby się z tym stwierdzeniem twórcy konkursów takich jak CEC, czy BBOB. Tworzą oni szereg funkcji benchmarkowych, które mają na celu empirycznie pokazać silne i słabe strony algorytmów w konkretnych sytuacjach.
 
 \subsection{Funkcje benchmarkowe}
-Funkcje benchmarkowe, to złożone furnkcje. Skomplikowanie polega między innymi na wielu ekstremach funkcji lub specyficznym umieszczeniu minimum globalnego. Dzięki nim można porównać algorytmy.
+Funkcje benchmarkowe, to złożone funkcje. Skomplikowanie polega między innymi na wielu ekstremach funkcji lub specyficznym umieszczeniu minimum globalnego. Dzięki nim można porównać algorytmy.
 
 \subsection{Techniki porównywania wyników}
 Wybranie funkcji benchmarkowych nie wystarczy, aby stwierdzić który z algoryrytmów ewolucyjnych jest lepszy. Sa to algorytmy niedeterministyczne - poszukiwanie rozwiązania za każdym razem będzie wyglądało inaczej nawet przy takich samych parametrach. Oznacz to, że dla wiarygodności wyników należy testy uruchamiać wielokrotnie. Posiadając takie wyniki należy posłużyć się wybraną metodą, aby porównać skuteczność algorytmów. W tej pracy do porównywania został wybrany test Wilcoxona, ponieważ można go użyć do porównywania par obserwacji oraz ten test pokazuje różnice cech.
 
-\subsubsection{Test Wilcoxona}
-Ten test bazuje na teście t-Studenta i sprawdza, czy istnieje statycznie istotna różnica mięedzy dwoma zbiorami. Jest on jednak inaczej realizowany, a hipoteza dotyczy median. Hipoteza zerowa $H_0$ brzmi "Różnica median zbiorów wynosi 0". \cite{wilcox}
+\subsubsection*{Test Wilcoxona}
+Test Wilcoxona jest testem nieparametrycznym - nie jest potrzebna wiedza na temat rozkładu populacji \cite{wilcox}. Ten test sprawdza, czy istnieje statycznie istotna różnica między dwoma zbiorami, które były losowane z pewnym rozkładem prawdopodobieństwa. Hipoteza dotyczy median wygenerowanych zbiorów. Hipoteza zerowa $H_0$ brzmi "Różnica median zbiorów wynosi 0". Na podstawie sprawdzenia hipotezy możemy wywnioskować, czy 2 rozkłady prawdopodobieństwa generują dane istotnie różne.
 
 \pagebreak
 
-\section{Wpływ technik na efektywność CMA-ES}
-
-\subsection{Algorytm CMA-ES}
-Klasyczne algorytmy ewolucyjne nie dostosowują się do charakterystyki optymalizowanej funkcji. W większości z nich, podczas generowania punktów, rozkład prawdopodobieństwa jest stały. Z tego faktu wynika problem ustalenia parametrów przeszukiwania. Na przeciw temu wychodzi algorytm CMA-ES, który w swej idei ma dopasowywać się do badanej funkcji.\\
-Rozwinięcie akronimu CME-ES podpowiada, w jaki sposób jest to realizowane: Covariance Matrix Adaptation - Evolution Strategy (adaptacja macierzy kowariancji -~strategia ewolucyjna). Jest to alorytm oparty na tehcnikach ewolucyjnych, natomiast punkty losowane są na podstawie macierzy kowariancji, która jest w każdej iteracji dostosowywana do aktualnej sytuacji przeszukiwań.
-
-\subsubsection{Opis algorytmu}
-Zgodnie z tym, co zostało ustalone na początku tego rozdziału, algorytm CMA-ES jest podobny do klasycznych algorytmów ewolucyjnych. Inny jest sposób generowania punktów. Można to zauważyć w poniższym, ogólnym pseudokodzie opisującym algorytm CMA-ES:
-\begin{Verbatim}[baselinestretch=1.1]
-	inicjalizuj zmienne
-	dopóki nie są spełnione warunki stopu:
-		generuj punkty
-		oblicz wartości punktów
-		przeprowadź selekcję punktów
-		oblicz wartość oczekiwaną rozkładu
-		oblicz długość kroku
-		oblicz macierz kowariancji
-\end{Verbatim}
-Ten pseudokod zawiera kilka pojęć, które nie zostały jeszcze omówione. Ich opis znajduje się w kolejnych podrozdziałach.
-
-\subsubsection*{Macierz kowariancji}
-Pierwszą zmienną, która będzie opisana jest macierz kowariancji. Tak jak napisano we wstępie do tego rozdziału, algorytm CMA-ES posiada inny sposób generowania punktów, niż klasyczne algorytmy ewolucyjne. Wszystkie punkty są generowanie poprzez losowanie na podstawie macierzy kowariancji. Oznacza to, że nie istnieje bezpośredni związek pomiędzy punktami - w~klasycznych algorytmach ewolucyjych zazwyczaj można było mówić o rodzicach nowo wygenerowanego punktu.\\
-Rola dotychczas wygenerowanych punktów jest jednak istotna w algorytmie CMA-ES. Mają one wpływ na adaptację macierzy kowariancji. Odbywa się to w następujący sposób: z populacji punktów wybiera się $\mu$ punktów (zazwyczaj połowę), która zwraca lepsze wartości funkcji celu. Następnie przypisuje się im wagi - w zależności od tego, jak dobry jest punkt. Na postawie tych danych wyznaczana jest empiryczna macierz kowariancji.
-
-\subsubsection*{Wartość oczekiwana rozkładu}
-Punkty generowane są na podstawie rozkładu określonego macierzą kowariancji wokół wartości oczekiwanej. Sama macierz nie mówi jednak nic o wartości oczekiwanej. Wymaga to oddzielnego wyznaczenia tej wartości.\\
-Podobnie jak w macierzy kowariancji, wybiera się $\mu$ punktów. Dla tych punktów obliczana jest średnia ważona. Ta średnia jest nową wartością oczekiwaną.
-
-\subsubsection*{Długość kroku}
-Generowanie punktów z macierzy kowariancji pozwala na skalowanie tego rozkładu poprzez dodanie jednego parametru. Ten parametr jest nazywany długością kroku. W~algorytmie CMA-ES dlugość kroku obliczana jest na podstawie kierunku przemieszczania się wartości oczekiwanej rozkładu. Długość kroku zwiększa się, gdy wartość oczekiwana przemieszcza się w tym samym kierunku Skraca natomiast, gdy kierunek jest zmienny.
-
-\subsubsection*{Generowanie punktów}
-Punkty są generowane poprzez wylosowanie wektora liczb na postawie macierzy kowariancji. Wylosowany wektor jest skalowany przez długość kroku, a na koniec jest przesuwany o wektor równy wartości oczekiwanej rozkładu.
-
-\subsubsection*{Selekcja punktów}
-Selekcja punktów, to wybór $\mu$ punktów spośród całej populacji. Wybierane są te punkty, które mają lepszą wartość funkcji. Punktom przypisywane są również wagi wykorzystywane do wyznaczania wartości oczekiwanej.
+\section{Weryfikacja wpływu technik uwzględniania ograniczeń na efektywność CMA-ES}
 
 \subsection{Cel testów}
 Zrealizowanie celu całej pracy wymaga sprawdzenia, jak można usprwanić algorytm \CMAES. Trudno byłoby to zrealizować bez przetestowania samego algorytmu.\\
@@ -394,26 +406,30 @@ Do przeprowadzania testów została użyta biblioteka przygotowana przez Nikolau
 \subsection{Wyniki testów}
 
 \subsubsection*{Funkcja stała}
-Wbrew oczekiwanion funkcja stała ma tendencje do zmniejszania kroku algorytmu, więc po kilkuset iteracjach przemieszczenia się wartości oczekiwanej jest znikome. Obrazuje to rysunek \ref{cmaes:const}. Ograniczenie narzucone na algorytm to [-3; 3] na obu wymiarach.
+Wbrew oczekiwanion algorytm CMA-ES uruchomiony na funkcji stałi ma tendencje do zmniejszania kroku algorytmu, więc po kilkuset iteracjach przemieszczenia się wartości oczekiwanej jest znikome. Obrazują to rysunki w tym podrozdziale. Widać na nich fragmenty, w których punkty były losowane z dużą różnicą, obszar gdzie różnice były małe oraz miejsce, w którym algorytm znalazł się i prawie nie poruszał (czerwony kwadrat)\\
+Przeprowadzono testy, w których algorytm posiadał ograniczenie [-3; 3] na obu wymiarach oraz test bez ograniczeń.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{cmaes-const-boundaries-dim2-start0_0}
-\caption{Histogram punktów; algorytm CMA-ES; funkcja stała; 2 wymiary}
-\label{cmaes:const}
+\subfloat[z ograniczeniami]{\includegraphics[width=0.45\textwidth]{cmaes-const-boundaries-dim2-start0_0}}
+\quad
+\subfloat[bez ograniczeń]{\includegraphics[width=0.45\textwidth]{cmaes-const-noboundaries-dim2-start0_0}}
+\caption{Histogram punktów; algorytm CMA-ES; funkcja losowa; 2 stała}
 \end{figure}
 
 \subsubsection*{Funkcja losowa}
-Podobnie jak w przypadku funkcji losowej krok algorytmu zmniejszał się dość szybko. Na poniższym wykresie również można zauważyć punkt, do którego zbiegł algorytm.
+Podobnie jak w przypadku obliczeń funkcji stałej krok algorytmu CMA-ES na funkcji losowej zmniejszał się dość szybko. Poniższe wykresy, podobnie jak w przpadku testowania funkcji stałej, przedstawiają histogram wystąpień punktów w algorytmie CMA-ES z ograniczeniami oraz bez ograniczenia.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{cmaes-rand-boundaries-dim2-start0_0}
+\subfloat[z ograniczeniami]{\includegraphics[width=0.45\textwidth]{cmaes-rand-boundaries-dim2-start0_0}}
+\quad
+\subfloat[bez ograniczeń]{\includegraphics[width=0.45\textwidth]{cmaes-rand-noboundaries-dim2-start0_0}}
 \caption{Histogram punktów; algorytm CMA-ES; funkcja losowa; 2 wymiary}
 \end{figure}
 
 \subsubsection*{Funkcja kwadratowa dwuwymiarowa}
-Badano funckję o wzorze $y=x_1^2+x_2^2$. Dla tej funkcji zdecydowano się zmienić ograniczenie. Wynosiło ono [0,1;3] na obu wymiarach. Początkowa wartość oczekiwana wynosiła [2;2].Wykres dla tak przyogotowanej symulacji znajduje się na rysunku \ref{cmaes:const} (oś Z została obcięta do przedziału [0;10]).
+Badano funckję o wzorze $y=x_1^2+x_2^2$. Dla tej funkcji zdecydowano się zmienić ograniczenie. Wynosiło ono [0,1;3] na obu wymiarach. Początkowa wartość oczekiwana wynosiła [2;2].Wykres dla tak przyogotowanej symulacji znajduje się na rysunku \ref{cmaes:x2} (oś Z została obcięta do przedziału [0;10]).
 
 \begin{figure}[H]
 \centering
@@ -423,12 +439,19 @@ Badano funckję o wzorze $y=x_1^2+x_2^2$. Dla tej funkcji zdecydowano się zmien
 \end{figure}
 
 \subsection{Wnioski}
-Na wykresach z funkcją losową i stałą nie udało się zaobserwować żadnych efektów widocznych podczas testowania błądzenia przypadkowego. Autor nie zdecyodwał się na generowanie wykresów innych metod transformacji rozwiązań, ponieważ nie dałoby to widocznych różnic w wykresach. Zdecydowano się jednak na porównanie za pomocą funkcji CEC dwóch wariantów transformacji rozwiązań.
+Na wykresach, które przedstawiają histogramy punktów podczas symulacji algorytmu CMA-ES na funkcji losowej i stałej, nie udało się zaobserwować żadnych efektów widocznych podczas testowania błądzenia przypadkowego. Autor nie zdecyodwał się na generowanie wykresów innych metod transformacji rozwiązań, ponieważ nie dałoby to widocznych różnic w wykresach. Zdecydowano się jednak na porównanie za pomocą funkcji CEC dwóch wariantów transformacji rozwiązań.
 
-\subsection{CEC 2013}
-- cel\\
-- które transofrmacje wybrano\\
-- porównanie dokładności wyników metodą Wilcoxona
+\subsection{Porównanie wariantów trasformacji rozwiązań}
+Celem testów było sprawdzenie, czy zmiana technik uwzględniania ograniczeń w algorytmie CMA-ES wpływa na rozwiązanie. Do tego porównania wybranow 2 warianty transformacji rozwiązań: ewolucję darwinowską i ewolucję lamarkowską, które zostały opisane poniżej. Dla obu wariantów uruchomiono symulacje algorytmu CMA-ES. Do tego celu wykorzystano dunkcje benchmarkowe z konkursu CEC 2013, których dokładny opis znajduje się tutaj \cite{cec}. Ten zestaw został wybrany ze względu na duże zróżnicowanie funkcji oraz implementację w języku MATLAB, z której skorzystano \cite{cec_code}. Algorytm CMA-ES (dla obu typów ewolucji) uruchomiono po 50 razy dla każdej funkcji benchmarkowej. Algorytm CMA-ES dla każdej symulacji zwrócił najlepszy punkt, który znalazł. W ten sposób dla 28 funkcji uzyskano po 50 wartości. Wyniki zostały porównane testem Wilcoxona, aby sprawdzić, czy w istotny sposób się różnią.
+
+\subsubsection*{ewolucja lamarkowska}
+Punkt, który wypadnie poza ograniczenie jest transofrmowany wewnątrz ograniczenia. Po transformacji jest obliczana wartość funkcji punktu.
+
+\subsubsection*{ewolucja darwinowska}
+Punkt nie jest transformowany wewnątrz ograniczenia. Wartość funkcji celu obliczamy w następujący sposób: kopiujemy punkt, przekształcamy symetrycznie względem tych ograniczeń, które zostały przekroczone, a na koniec obliczamy wartość funkcji dla tego punktu.
+
+\subsubsection *{Wyniki}
+
 
 \pagebreak
 
@@ -446,7 +469,7 @@ Na wykresach z funkcją losową i stałą nie udało się zaobserwować żadnych
 \emph{Wykłady z algorytmów ewolucyjnych}, Jarosław Arabas, 2004
 
 \bibitem{wilcox}
-\emph{The Wilcoxon Signed-Rank Test}, Richard Lowry,\\http://vassarstats.net/textbook/ch12a.html
+\emph{The Wilcoxon Signed-Rank Test}, Richard Lowry, \url{http://vassarstats.net/textbook/ch12a.html}
 
 \bibitem{magist}
 \emph{Różnicowa implementacja algorytmu CMAES}, Michał Bobowski, 2015
@@ -458,8 +481,16 @@ Na wykresach z funkcją losową i stałą nie udało się zaobserwować żadnych
 \emph{Completely Derandomized Self-Adaptation in Evolution Strategies} w \emph{Evolutionary Computation}, 9(2), pp. 159-195, Nikolaus Hansen, Andreas Ostermeier, 2001
 
 \bibitem{cmaes_code}
-\emph{CMA-ES: Evolution Strategy with Covariance Matrix Adaptation for nonlinear function minimization}, Nikolaus Hansen,\\https://www.lri.fr/~hansen/cmaes\_inmatlab.html
+\emph{CMA-ES: Evolution Strategy with Covariance Matrix Adaptation for nonlinear function minimization}, Nikolaus Hansen, \url{https://www.lri.fr/~hansen/cmaes\_inmatlab.html}
 
+\bibitem{cmaes_tutorial}
+\emph{The CMA evolution strategy: A tutorial. arXiv:1604.00772v1},  Nikolaus Hansen, 2016
+
+\bibitem{cec}
+\emph{Problem Definitions and Evaluation Criteria for the CEC 2013 Special Session on Real-Parameter Optimization}, J. J. Liang, B. Y. Qu, P. N. Suganthan, Alfredo G. Hernández-Díaz, 2013
+
+\bibitem{cec_code}
+\emph{CEC13 Test Function Suite }, Jane Jing Liang, \url{http://web.mysites.ntu.edu.sg/epnsugan/PublicSite/Shared%20Documents/CEC2013/cec13matlab.zip}
 
 \end{thebibliography}
 
