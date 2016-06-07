@@ -41,11 +41,11 @@ Praca bada wpływ różnych metod uwzględniania ograniczeń w algorytmie CMA-ES
 
 We wstępie został przedstawiony przedmiot badań oraz cel pracy - sprawdzenie możliwości poprawy algorytmu CMA-ES.
 
-Po wstępie opisano algorytm CMA-ES. Teoretyczny opis jest niezbędny do zrozumienie mechanizmów algorytmu, a w konsekwencji do przeprowadzenia badań. Kolejnym tematem, który jest opisany w sposób teoretyczny są techniki uwzględniania ograniczeń. W rozdziale pośięconym tym technikom znajdują się nie tylko opisy poszczególnych metod, ale również pokazano w sposób empiryczny jak mogą wpływać na algorytmy. Do tego przedstawienia użyto algorytmu błądzenia przypadkowego. Na bazie błądzenia przypadkowego przeanalizowane są charakterystyczne cechy metod uwzględniania ograniczeń. Przedstawienie tych własności zostało zrelizowane szeregiem testów badających między innymi rozkłady prawdopodobieństw oraz wartości oczekiwanych.
+Po wstępie opisano algorytm CMA-ES. Teoretyczna analiza tego algorytmu jest niezbędna do zrozumienie jego mechanizmów, a w konsekwencji do przeprowadzenia badań. Z tego samego względu opisano również techniki uwzględniania ograniczeń. W rozdziale poświęconym ograniczeniom zawarto nie tylko opisy poszczególnych metod, ale również pokazano w sposób empiryczny jak mogą wpływać na algorytmy. W tym celu użyto algorytmu błądzenia przypadkowego. Zaimplementowano ten algorytm z różnymi wariantami uwzględniania ograniczeń, a następnie przeprowadzono szereg testów badających między innymi rozkłady prawdopodobieństw oraz wartości oczekiwanych.
 
 Następny rozdział opisuje sposoby, w jaki mogą być testowane algorytmy optymalizacji globalnej. Niezbędne do testowania są specjalnie przygorowane funkcje benchmarkowe, które badają skuteczność algorytmów. W tej części przedstawiono również test Wilcoxona, który wykorzystuje się do porównania wyników funkcji benchmarkowych.
 
-Opisane metody testowania zostały użyte w kolejnym rozdziale, który przedstawia testy wykonane na algorytmie CMA-ES oraz na modyfikacjach algorytmu CMA-ES. Modyfikacje polegały na zmiane metod uwzględniania ograniczeń. Wyniki zostały zebrane i ze sobą porównane.
+Opisane metody testowania zostały użyte w  rozdziale, który przedstawia testy wykonane na algorytmie CMA-ES oraz jego modyfikacjach. Modyfikacje polegały wyłącznie na zmiane metod uwzględniania ograniczeń. Wyniki zostały zebrane i ze sobą porównane.
 
 W ostatnim rozdziale zebrane są obserwacje poczynione w pracy. Rozdzaił ten, to również wskazanie możliwości poprawy algorytmu CMA-ES.
 
@@ -54,23 +54,21 @@ W ostatnim rozdziale zebrane są obserwacje poczynione w pracy. Rozdzaił ten, t
 \section{Wstęp}
 Algorytmy ewolucyjne wykorzystuje się głównie w problemach z wieloma zmiennymi, np. w planowaniu procesów przemysłowych.\cite{zast} Klasyczne algorytmy ewolucyjne nie dostosowują się do charakterystyki optymalizowanej funkcji. W~większości z nich rozkład prawdopodobieństwa generowanych punktów nie zmienia się w trakcie symulacji algorytmu. Z~tego faktu wynika problem ustalenia parametrów początkowych, np. wariancji rozkładu prawdopodobieństwa. Ustalenie zbyt niskiej wartości wariancji może prowadzić do znalezienia jedynie pewnego optimum lokalnego, natomiast ustalenie zbyt dużej wartości wariancji sprawia, że trudno znaleźć algorytmowi optimum globalne.
 
-Na przeciw problemowi ustalenia wariancji wychodzi algorytm CMA-ES. Już samo rozwinięcie akronimu CME-ES mówi o tym: Covariance Matrix Adaptation - Evolution Strategy (adaptacja macierzy kowariancji -~strategia ewolucyjna). Jest to algorytm oparty na tehcnikach ewolucyjnych, a~punkty losowane są na podstawie macierzy kowariancji (wielowymiarowe uogólnienie wariancji), która jest w każdej iteracji dostosowywana do aktualnej sytuacji przeszukiwań. Takie rozwiązanie sprawia, że dobór parametrów początkowych nie jest tak istotny jak w innych algorytmach ewolucyjnych.
+Na przeciw problemowi ustalenia wariancji wychodzi algorytm CMA-ES. Już samo rozwinięcie akronimu CME-ES mówi o tym: Covariance Matrix Adaptation - Evolution Strategy (adaptacja macierzy kowariancji -~strategia ewolucyjna). Jest to algorytm oparty na technikach ewolucyjnych, aczkolwiek punkty losowane są na podstawie macierzy kowariancji (wielowymiarowe uogólnienie wariancji), która jest w każdej iteracji dostosowywana do aktualnej sytuacji przeszukiwań. Takie rozwiązanie sprawia, że dobór parametrów początkowych nie jest tak istotny jak w innych algorytmach ewolucyjnych.
 
-CMA-ES jest algorytmem dość skomplikowanym w szczegółach - można o tym przeczytać w rozdziale \ref{secalgcmaes}, który jest poświęcony teoretycznemu opisowi tegoż algorytmu. Mimo kilkunastu lat istnienia podejmowane są kolejne próby jego optymalizacji (\cite{magist}\cite{lcmaes}). 
+CMA-ES jest algorytmem dość skomplikowanym w szczegółach - można się o tym przekonać czytając rozdział \ref{secalgcmaes}, który jest poświęcony teoretycznemu opisowi tegoż algorytmu. Mimo kilkunastu lat istnienia podejmowane są kolejne próby jego optymalizacji (\cite{magist}\cite{lcmaes}). Warto jednocześnie pamiętać, że w większości wariantów algorytmu CMA-ES trudno mówić o uniwersalnej optymalizacji. Zazwyczaj poprawa w pewnej grupie funkcji skutkuje pogorszeniem wyników w innym rodzaju funkcji.
 
 Ta praca jest próbą optymalizacji algorytmu CMA-ES skoncentrowaną na ograniczeniach kostkowych. Ograniczenia napotykamy w wielu problemach - materiały mają wytrzymałość, komputery skończoną pamięć, a czasem ogranicza prędkość światła.
 
-W aktualnej wersji algorytmu CMA-ES punkty, które znajdą się poza ograniczeniem, są na to ograniczenie rzutowane (dokładniej o tej metodzie można przeczytać w~rozdziale \ref{secrzut}). Jest to tylko jedna z metod uwzględniania ograniczeń. Nietrudno wyobrazić sobie, że zamiast rzutować punkt na ograniczenie, będzie się go reinicjować, powtórnie losować, czy też przekształcić symetrycznie względem ograniczeń.
+W aktualnej wersji algorytmu CMA-ES punkty, które znajdą się poza ograniczeniem, są na to ograniczenie rzutowane (o rzutowaniu można przeczytać w rozdziale \ref{secrzut}). Jest to tylko jedna z metod uwzględniania ograniczeń. Warto zauważyć, że zamiast rzutować punkt na ograniczenie, można go reinicjować, powtórnie losować, czy też przekształcić symetrycznie względem ograniczeń.
 
-\subsection{Cel pracy}
+\subsection*{Cel pracy}
 Celem pracy jest sprawdzenie, w jaki sposób można poprawić algorytm CMA-ES. Analiza będzie skupiała się na ograniczeniach kostkowych. Cel będzie realizowany poprzez teoretyczne roważania oraz przeprowadzenie testów.
 
 \pagebreak
 
-\section{Algorytm CMA-ES}
-\label{secalgcmaes}
+\section{Algorytm CMA-ES} \label{secalgcmaes}
 
-\subsection{Opis algorytmu}
 Zgodnie z tym, co zostało ustalone we wstępie, algorytm CMA-ES należy do rodziny algorytmów ewolucyjnych. Cechą wyróżniającą ten algorytm jest specyficzny sposób generowania punktów. Można to zauważyć w poniższym pseudokodzie opisującym algorytm CMA-ES (równania są cytowaniami z \cite{cmaes_tutorial}):
 \begin{Verbatim}
 inicjalizuj zmienne
@@ -99,7 +97,7 @@ dopóki nie są spełnione warunki stopu:
 \end{Verbatim}
 \hspace{12ex} $p_c^{t+1} = (1-c_c)p_c^t+\sqrt{c_c(2-c_c)\mu_{eff}}\frac{m^{t+1}-m^t}{\sigma^t}$
 
-\hspace{8,5ex} $C^{t+1} = (1-c_1-c_\mu\sum{w_j})C^t+c_1p_c^{t+1}{(p_c^{t+1})}^T+c_\mu \sum\limits_{i=1}^\lambda w_iy_{i:\lambda}^{t+1}{(y_{i:\lambda}^{t+1})}^T$
+\hspace{8,5ex} $C^{t+1} = (1-c_1-c_\mu\sum\limits_{j=1}^\lambda w_j)C^t+c_1p_c^{t+1}{(p_c^{t+1})}^T+c_\mu \sum\limits_{i=1}^\lambda w_iy_{i:\lambda}^{t+1}{(y_{i:\lambda}^{t+1})}^T$
 \newline
 gdzie:
 \begin{itemize}[noitemsep]
@@ -110,22 +108,29 @@ gdzie:
 \item $C^t$ - macierz kowariancji iteracji t
 \item $f(x)$ - wartość funkcji w punkcie x
 \item $\lambda$ - wielkość populacji (ilość punktów x w jednej iteracji)
-\item $c_m$ - stała ucząca
+\item $c_m$ - współczynnik nauki wartości oczekiwanej
 \item $\mu$ - liczba wybieranych punktów spośród wszystkich $\lambda$ punktów (patrz \ref{selekcjapunktow} Selekcja punktów)
 \item $w_i$ - waga punktu $x_i$
+\item $p_\sigma^t$ - sprzężona ścieżka ewolucji w iteracji t
+\item $c_\sigma$ - współczynnik nauki długości kroku
+\item $\mu_{eff}=\frac{1}{\sum\limits_{i=1}^\mu w_i^2}$
+\item $d_\sigma \approx 1$ - stała tłumienia
+\item $p_c^t$ - ścieżka ewolucji w iteracji t
+\item $c_c$ - współczynnik nauki macierzy kowariancji
+\item $c_1 \approx \frac{2}{n^2}$ 
+\item $c_\mu \approx min(\frac{\mu_{eff}}{n^2}, 1-c_1)$
+\item $y_{i:\lambda}^{t+1} = \frac{x_{i:\lambda}^{t+1}-m^t}{\sigma^t}$
 \end{itemize}
 
-Opis poszczególnych punktów znajduje się poniżej.
+Cały algorytm jest dość skomplikowany. Najważniejsze części są opisane poniżej w następującej kolejności: macierz kowariancji, wartość oczkiwana rozkładu, długość kroku, generowanie punktów, selekcja punktów.
 
-\subsection{Macierz kowariancji}
-Pierwszą zmienną, która będzie opisana jest macierz kowariancji. Wszystkie punkty są generowanie poprzez losowanie na podstawie macierzy kowariancji. Oznacza to, że nie istnieje bezpośredni związek pomiędzy punktami - w~klasycznych algorytmach ewolucyjnych zazwyczaj można było mówić o rodzicach nowo wygenerowanego punktu.
+\subsection{Macierz kowariancji} \label{macierz}
+Punkty w algorytmie CMA-ES są generowanie poprzez losowanie na podstawie macierzy kowariancji. Oznacza to, że nie istnieje bezpośredni związek pomiędzy punktami kolejnych iteracji - w~klasycznych algorytmach ewolucyjnych zazwyczaj można było mówić o rodzicach wygenerowanego punktu. Punkty wpływają jednak na macierz kowariancji, a pośrednio przez nią na kolejną generację punktów. Odbywa się to w następujący sposób: z populacji punktów wybiera się $\mu$ punktów (zazwyczaj połowę), która zwraca lepsze wartości funkcji celu. Następnie przypisuje się im wagi - w zależności od tego, jak dobry jest punkt. Na postawie tych danych wyznaczana jest empiryczna macierz kowariancji.
 
-Rola dotychczas wygenerowanych punktów jest istotna w algorytmie \CMAES. Mają one wpływ na adaptację macierzy kowariancji. Odbywa się to w następujący sposób: z populacji punktów wybiera się $\mu$ punktów (zazwyczaj połowę), która zwraca lepsze wartości funkcji celu. Następnie przypisuje się im wagi - w zależności od tego, jak dobry jest punkt. Na postawie tych danych wyznaczana jest empiryczna macierz kowariancji.
+\subsection{Wartość oczekiwana rozkładu} \label{wartoscoczekiwana}
+Punkty generowane są na podstawie rozkładu określonego macierzą kowariancji. Sama macierz nie mówi jednak nic o wartości oczekiwanej. Wymaga to oddzielnego wyznaczenia tej wartości.
 
-\subsection{Wartość oczekiwana rozkładu}
-Punkty generowane są na podstawie rozkładu określonego macierzą kowariancji wokół wartości oczekiwanej. Sama macierz nie mówi jednak nic o wartości oczekiwanej. Wymaga to oddzielnego wyznaczenia tej wartości.
-
-Podobnie jak w macierzy kowariancji, wybiera się $\mu$ punktów. Dla tych punktów obliczana jest średnia ważona. Ta średnia jest nową wartością oczekiwaną.
+Podobnie jak w przypadku macierzy kowariancji, wybiera się $\mu$ punktów. Dla tych punktów wyznaczane są wektory przesunięć względem wartości oczekiwanej (każdy wektor jest skalowany przez wagę punktu). Wektory te sumujemy otrzymując pewien wektor wynikowy, który następnie jeszcze skalujemy przez współczynnik nauki. O tak otrzymany wektor przesuwamy dotychczasową wartość oczekiwaną.
 
 \subsection{Długość kroku}
 Generowanie punktów z macierzy kowariancji pozwala na skalowanie tego rozkładu poprzez dodanie jednego parametru. Ten parametr jest nazywany długością kroku. W~algorytmie CMA-ES długość kroku obliczana jest na podstawie kierunku przemieszczania się wartości oczekiwanej rozkładu. Długość kroku zwiększa się, gdy wartość oczekiwana przemieszcza się w tym samym kierunku. Skraca natomiast, gdy kierunek jest zmienny.
@@ -134,7 +139,7 @@ Generowanie punktów z macierzy kowariancji pozwala na skalowanie tego rozkładu
 Punkty są generowane poprzez wylosowanie wektora liczb na postawie macierzy kowariancji. Wylosowany wektor jest skalowany przez długość kroku, a na koniec jest przesuwany o wektor równy wartości oczekiwanej rozkładu.
 
 \subsection{Selekcja punktów} \label{selekcjapunktow}
-Selekcja punktów, to wybór $\mu$ punktów spośród całej populacji. Wybierane są te punkty, które mają lepszą wartość funkcji. Punktom przypisywane są również wagi wykorzystywane do wyznaczania wartości oczekiwanej.
+Selekcja punktów, to wybór $\mu$ punktów spośród całej populacji. Wybierane są te punkty, które mają lepszą wartość funkcji. Wartość funkcji wpływa również na przypisywane punktom wagi, o których wspomniano wcześniej.
 
 \pagebreak
 
@@ -146,13 +151,13 @@ Niektóre problemy optymalizacyjne posiadają ograniczenia. Szukając rozwiązan
 \item transformacji rozwiązań - punkty, które są poza ograniczeniami zostają zamieniane na punkty, które znajdują się w ograniczeniach.
 \end{itemize}
 
-W tej pracy skupiono się na transformacji rozwiązań.
+Każda z tych technik posiada wiele wariantów. Przeanalizowanie wszystkich mogłoby być bardzo czasochłonne. W związku z tym w tej pracy skupiono się na transformacji rozwiązań.
 
 \subsection{Transformacje rozwiązań} \label{transformacje}
-Istnieje wiele technik transformacji rozwiązań spoza ograniczeń na dopuszczalne. W~kolejnych podrozdziałach znajdują się metody transformacji rozwiązań, które były badane na potrzeby tej pracy. Każda z technik jest opisana słownie oraz pseudokodem. Opis słowny zawiera wyjaśnienie, co się dzieje z punktem, który znalazł się poza ograniczeniem. W~pseudokodzie zastosowano następujące oznaczenia:
+Istnieje wiele technik transformacji rozwiązań. W~kolejnych podrozdziałach znajdują się metody transformacji, które były badane na potrzeby tej pracy. Każda z technik jest opisana słownie oraz pseudokodem. Opis słowny zawiera wyjaśnienie, co się dzieje z punktem, który znalazł się poza ograniczeniem. W~pseudokodzie zastosowano następujące oznaczenia:
 \begin{itemize}[noitemsep]
 \item $x$ - punkt, który poddajemy naprawie
-\item $x'$ - rodzic punktu $x$, czyli z punktu $x'$ z zadanym rozkładem został wygenerowany punkt $x$
+\item $x'$ - rodzic punktu $x$; z punktu $x'$ z zadanym rozkładem został wygenerowany punkt $x$
 \item $x(i)$ - wartość $i$-tej współrzędnej punktu $x$
 \item $lb$ - ograniczenie dolne
 \item $ub$ - ograniczenie górne
@@ -168,7 +173,7 @@ Nowy punkt zostaje odrzucony i wraca do poprzedniej pozycji.
 
 \subsubsection{Rzutowanie}
 \label{secrzut}
-Punkt jest transformowany do najbliższego punktu, który spełnia ograniczenie. Oznacza to, że dla każdej współrzędnej sprawdzany jest warunek zawierania się w ograniczeniach. Wartości współrzędnych, dla których nie jest on spełniony, zmieniane są na wartości ograniczeń (odpowiednio dolne lub górne), które są najbliżej.
+Punkt jest transformowany do najbliższego punktu, który spełnia ograniczenia. Oznacza to, że dla każdej współrzędnej sprawdzany jest warunek zawierania się w ograniczeniach. Wartości współrzędnych, dla których nie jest on spełniony, zmieniane są na wartości ograniczeń (odpowiednio dolne lub górne), które są najbliżej.
 
 \begin{Verbatim}[baselinestretch=1.1]
 	dla każdej współrzędnej i
@@ -194,7 +199,7 @@ Punkt jest powtórnie generowany do momentu, aż spełni ograniczenie kostkowe.
 \end{Verbatim}
 
 \subsubsection{Zawijanie}
-Dla każdej współrzędnej sprawdzane są warunki na ograniczenie. W przypadku współrzędnych, na których punkt jest poza ograniczeniem, różnica pomiędzy ograniczeniem a wartością współrzędnej punktu jest zapamiętywana. Tę różnicę odkładamy na przeciwległym ograniczeniu po stronie, która jest wewnątrz ograniczenia. W tym miejscu znajduje się nowa wartość współrzędnej punktu. W intuicyjny sposób można to wyjaśnić tak, że dla punktów nie ma ograniczeń, a przestrzeń przeszukiwań po każdym wymiarze jest jakby "zawinięta".
+Dla każdej współrzędnej sprawdzane są warunki ograniczeń. W przypadku współrzędnych, na których punkt jest poza ograniczeniem, różnica pomiędzy ograniczeniem a wartością współrzędnej punktu jest zapamiętywana. Tę różnicę odkładamy na przeciwległym ograniczeniu po stronie, która jest wewnątrz ograniczeń. W tym miejscu znajduje się nowa wartość współrzędnej punktu. Z perspektywy punktu nie ma ograniczeń, a przestrzeń przeszukiwań po każdym wymiarze jest jakby "zawinięta".
 
 \begin{Verbatim}[baselinestretch=1.1]
 	dla każdej współrzędnej i
@@ -205,7 +210,7 @@ Dla każdej współrzędnej sprawdzane są warunki na ograniczenie. W przypadku 
 \end{Verbatim}
 
 \subsubsection{Odbicie}
-Dla każdej współrzędnej sprawdzane są warunki na ograniczenie. W przypadku współrzędnych, na których punkt jest poza ograniczeniem, wartość punktu tej współrzędnej jest symetrycznie odbita względem ograniczenia, którego warunek został złamany.
+Dla każdej współrzędnej sprawdzane są warunki ograniczeń. W przypadku współrzędnych, na których punkt jest poza ograniczeniem, wartość punktu tej współrzędnej jest symetrycznie odbita względem ograniczenia, którego warunek został złamany.
 
 \begin{Verbatim}[baselinestretch=1.1]
 	dla każdej współrzędnej i
@@ -228,7 +233,7 @@ S_1 = X_1, S_i=S_{i-1}+X_i
 Zmienne losowe mogą być realizowane w różny sposób. Mogą to być wektory o~rozkładzie normalnym, jednostajnym lub innym.
 
 \subsection{Metoda przeprowadzania testów}
-Celem testów jest zaobserwowanie, jaki wpływ na symulację ma metoda uwzględniania ograniczeń. Do tak postawionego celu można podejśc na różne sposby. Wybrano 2 cechy, które miały najlepiej zrealizować cel:
+Celem testów jest zaobserwowanie, jaki wpływ na symulację ma metoda uwzględniania ograniczeń. Do tak postawionego celu można podejśc na różne sposby. Wybrano 2 cechy, które miały zrealizować postawiony cel:
 \begin{enumerate}
 \item Wartość oczekiwana generowanego punktu (razem z poprawą).
 \item Rozkład prawdopodobieństwa generowanych punktów.
@@ -237,14 +242,14 @@ Celem testów jest zaobserwowanie, jaki wpływ na symulację ma metoda uwzględn
 Sposoby testowania obu cech są opisane w kolejnych podrozdziałach.
 
 \subsubsection{Wartość oczekiwana generowanego punktu}
-Błądzenie przypadkowe jest dobrze określone. W tym algorytmie wartością oczekiwaną losowanej liczby $X_i$ jest 0. Implikuje to fakt, że wartością oczekiwaną $S_i$ jest $S_{i-1}$. Ustalenie ograniczeń kostkowych powoduje, że nadal losujemy liczbę $X_i$, której wartość oczekiwana jest równa 0. Dodajemy jednak metody naprawy. W związku z tym wartością oczekiwaną $S_i$ nie zawsze jest $S_{i-1}$.
+Wartością oczekiwaną liczby $X_i$ w błądzeniu przypadkowym jest 0. Implikuje to fakt, że wartością oczekiwaną $S_i$ jest $S_{i-1}$. Ustalenie ograniczeń kostkowych powoduje, że nadal losujemy liczbę $X_i$, której wartość oczekiwana jest równa 0. Dodajemy jednak metody naprawy. W związku z tym wartością oczekiwaną $S_i$ nie zawsze jest $S_{i-1}$.
 
 Dla każdego punktu $p$ przestrzeni przeszukiwań można przypisać wektor $\overrightarrow{d}$. Początek $\overrightarrow{d}$ znajduje się w $p$. Załóżmy teraz, że $p$ jest punktem $S_i$ pewnego błądzenia przypadkowego z ograniczeniami. Koniec wektora $\overrightarrow{d}$ znajduje się w wartości oczekiwanej punktu $S_{i+1}$.
 
 Wykres, który będzie zawierał wektory $\overrightarrow{d}$, pozwoli na określenie charakterystyki przemieszczania się punktów w poszczególnych częściach przestrzeni przeszukiwań.
 
 \subsubsection*{Implementacja}
-Do wizualizacji wybrano symulację, w której punkty posiadają 2 wymiary. Pozwala to na przejrzystą wizualizację wektorów dla każdego z punktów. Pokazuje też zachowanie wektorów w rogach - punktach, które są blisko ograniczeń.
+Do wizualizacji wybrano symulację, w której punkty posiadają 2 wymiary. Pozwala to na przejrzystą wizualizację wektorów dla każdego z punktów. Pokazuje też zachowanie wektorów w rogach - punktach, które są blisko kilku ograniczeń.
 
 Dla każdego z 2 wymiarów wybrano kilkanaście, równoodległych punktów. W skład tych punktów wchodziły też punkty znajdujące się na ograniczeniach. Następnie stworzono 2 pętle po tych punktach (jedna zagnieżdżona w drugiej). W ten sposób uzyskano regularnie rozłożone punkty w dwóch wymiarach.
 
@@ -300,7 +305,9 @@ Wektory wartości oczewkianych, które są blisko ograniczeń są skierowane od 
 \end{figure}
 
 \subsubsection*{Rzutowanie}
-Zgodnie z przewidywaniami największe prawdopodobieństwo wystąpienia punktu jest na ograniczeniu, co bardzo dobrze obrazuje rysunek \ref{bladzenie:rzutowanie2d}. Na rysunkach \ref{bladzenie:rzutowanie1dn} i \ref{bladzenie:rzutowanie1dj} zakres osi~Y został zmniejszony do odpowiednio $[30000;60000]$ oraz $[70000;140000]$, aby uwypuklić interesujące efekty. W związku z tym, wartości przedziałów brzegowych nie są widoczne - były o kilka rzędów wielkości większe od pozostałych wartości. Warto zwrócić uwagę na niespodziewane zjawisko - wartości przedziałów blisko ograniczeń są mniejsze, niż pozostałe. Oznacza to, że punkty w tych przedziałach występują z mniejszym prawdopodobieństwem, niż pozostałe. Wydawać by się mogło, że powinno być inaczej, ponieważ podczas symulacji punkty często są rzutowane na ograniczenie. Dodatkowo, w rozkładzie jednostajnym widać, że istnieją przedziały, w~których punkty występują z~większym prawdopodobieństwem. Autorowi nie udało się formalnie uzasadnić tego zjawiska. Intuicja prowadzi do hipotezy, że punkty, które znalazły się poza ograniczeniem, bez naprawy po kilku iteracjach zapełniałyby "dołek". Naprawa natomiast sprawia, że cała dalsza symulacja zostaje niejako przesunięta. W~ten sposób powstaje "górka" w~rozkładzie jednostajnym. Brak górki w rozkładzie normalnym można tłumaczyć charakterystyką samego rozkładu - spadek prawdopodobieństwa wraz z oddalaniem się od wartości oczekiwanej.
+Zgodnie z przewidywaniami największe prawdopodobieństwo wystąpienia punktu jest na ograniczeniu, co bardzo dobrze obrazuje rysunek \ref{bladzenie:rzutowanie2d}. Na rysunkach \ref{bladzenie:rzutowanie1dn} i \ref{bladzenie:rzutowanie1dj} zakres osi~Y został zmniejszony do odpowiednio $[30000;60000]$ oraz $[70000;140000]$, aby uwypuklić interesujące efekty. W związku z tym, wartości przedziałów brzegowych nie są widoczne - były o kilka rzędów wielkości większe od pozostałych wartości.
+
+Warto zwrócić uwagę na niespodziewane zjawisko - wartości przedziałów blisko ograniczeń są mniejsze, niż pozostałe. Oznacza to, że punkty w tych przedziałach występują z mniejszym prawdopodobieństwem, niż pozostałe. Wydawać by się mogło, że powinno być inaczej, ponieważ podczas symulacji punkty często są rzutowane na ograniczenie. Dodatkowo, w rozkładzie jednostajnym widać, że istnieją przedziały, w~których punkty występują z~większym prawdopodobieństwem. Autorowi nie udało się formalnie uzasadnić tego zjawiska. Intuicja prowadzi do hipotezy, że punkty, które znalazły się poza ograniczeniem, bez naprawy po kilku iteracjach zapełniałyby "dołek". Naprawa natomiast sprawia, że cała dalsza symulacja zostaje niejako przesunięta. W~ten sposób powstaje "górka" w~rozkładzie jednostajnym. Brak górki w rozkładzie normalnym można tłumaczyć charakterystyką samego rozkładu - spadek prawdopodobieństwa wraz z oddalaniem się od wartości oczekiwanej.
 
 \begin{figure}[H]
 \centering
@@ -553,17 +560,25 @@ Odbijanie  & . & . & . & . & . & . & . & . & - & . & . & . & . & . \\ \hline
 Zawijanie  & - & . & + & . & . & . & . & - & - & . & + & . & . & . \\ \hline
 Próbkowanie & - & . & + & . & . & . & . & - & - & - & . & . & - & . \\ \hline
 Darwinowska & + & . & . & . & . & . & . & + & + & . & - & . & - & . \\ \hline
-\end{tabular} \\
+\end{tabular} \\ \\
 
+Powyższe dane pokazują, że wyniki poszczególnych algorytmów nie różnią się znacząco. Należy jednak zwrócić uwagę na wyniki próbkowania. Pokazują one, że wyniki symulacji 8 funkcji zwróciły istotnie lepsze rezulataty, niż dla symulacji z rzutowaniem. Przeciwny rezultat miał miejsce tylko dla symulacji 1 funkcji. Porównanie pozostałych algorytmów do oryginalnej implementacji nie daje wyraźnych różnic.
+
+Warto jeszcze zwrócić, że porównanie ewolucji darwinowskiej daje inne rezultaty, niż pozostałe porównania. Pozostałe porównania posiadają pewne wspólne zachowania (podobne wyniki dla funkcji 9, 14, 17, 22).
 
 
 \pagebreak
 
 \section{Podsumowanie}
+Celem pracy było sprawdzenie możliwości rozwoju algorytmu CMA-ES w obszarze ograniczeń kostkowych. Cel ten został zrealizowany poprzez teoretyczne rozważania oraz przeprowadzenie testów. Na tej podstawie tych badań wyciągnięto wnioski.
 
-\subsection{Wyniki}
+\subsection{Wnioski}
+Pierwszym wnioskiem jest fakt, że ograniczenia kostkowe wpływają na rozkład prawdopodobieństw symulacji. Oznacz to, że połączenie pewnych funkcji i ograniczeń kostkowych da lepsze rezulataty.
+
+Kolejnym wnioskiem jest to, że próbkowanie daje lepsze rezultaty od rzutowania w algorytmie CMA-ES. Należy jednak pamiętać, że próbkowanie jest bardziej czasochłonne ze względu na konieczność ponowne losowania punktów.
 
 \subsection{Możliwości rozwoju}
+
 
 \pagebreak
 
