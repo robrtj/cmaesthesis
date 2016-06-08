@@ -216,7 +216,7 @@
 \cleardoublepage
 \thispagestyle{empty}
 \pdfbookmark[0]{\@statementcap}{statement}
-Warszawa, dnia \@date
+Warszawa, dnia ..................
 \par\vspace{20mm}
 \begin{center}
   {\Large O{\'s}wiadczenie}

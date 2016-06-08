@@ -37,17 +37,17 @@
 
 \section{Streszczenie}
 
-Praca bada wpływ różnych metod uwzględniania ograniczeń w algorytmie CMA-ES. Wyniki badań przeanalizowane są w celu sprawdzenia, czy można wykorzystać informacje o ograniczeniach kostkowych w tymże algorytmie.
+Ta praca bada wpływ różnych metod uwzględniania ograniczeń w algorytmie CMA-ES. Wyniki badań przeanalizowane są w celu sprawdzenia, czy można wykorzystać informacje o ograniczeniach kostkowych w tymże algorytmie.
 
 We wstępie został przedstawiony przedmiot badań oraz cel pracy - sprawdzenie możliwości poprawy algorytmu CMA-ES.
 
-Po wstępie opisano algorytm CMA-ES. Teoretyczna analiza tego algorytmu jest niezbędna do zrozumienie jego mechanizmów, a w konsekwencji do przeprowadzenia badań. Z tego samego względu opisano również techniki uwzględniania ograniczeń. W rozdziale poświęconym ograniczeniom zawarto nie tylko opisy poszczególnych metod, ale również pokazano w sposób empiryczny jak mogą wpływać na algorytmy. W tym celu użyto algorytmu błądzenia przypadkowego. Zaimplementowano ten algorytm z różnymi wariantami uwzględniania ograniczeń, a następnie przeprowadzono szereg testów badających między innymi rozkłady prawdopodobieństw oraz wartości oczekiwanych.
+Po wstępie opisano algorytm CMA-ES. Teoretyczna analiza tego algorytmu jest niezbędna do zrozumienie jego mechanizmów, a w konsekwencji do przeprowadzenia badań. Z tego samego powodu opisano również techniki uwzględniania ograniczeń. W~rozdziale poświęconym ograniczeniom zawarto nie tylko opisy poszczególnych metod, ale również pokazano w sposób empiryczny jak mogą wpływać na algorytmy. W tym celu użyto algorytmu błądzenia przypadkowego. Zaimplementowano ten algorytm z różnymi wariantami uwzględniania ograniczeń, a następnie przeprowadzono szereg testów badających między innymi rozkłady prawdopodobieństw oraz wartości oczekiwanych.
 
-Następny rozdział opisuje sposoby, w jaki mogą być testowane algorytmy optymalizacji globalnej. Niezbędne do testowania są specjalnie przygorowane funkcje benchmarkowe, które badają skuteczność algorytmów. W tej części przedstawiono również test Wilcoxona, który wykorzystuje się do porównania wyników funkcji benchmarkowych.
+Następny rozdział opisuje sposoby, w jaki mogą być testowane algorytmy optymalizacji globalnej. Niezbędne do testowania są specjalnie przygotowane funkcje benchmarkowe, które badają skuteczność algorytmów. W tej części przedstawiono również test Wilcoxona, który wykorzystuje się do porównania wyników funkcji benchmarkowych.
 
-Opisane metody testowania zostały użyte w  rozdziale, który przedstawia testy wykonane na algorytmie CMA-ES oraz jego modyfikacjach. Modyfikacje polegały wyłącznie na zmiane metod uwzględniania ograniczeń. Wyniki zostały zebrane i ze sobą porównane.
+Opisane metody testowania zostały użyte w rozdziale, który przedstawia testy wykonane na algorytmie CMA-ES oraz jego modyfikacjach. Modyfikacje polegały wyłącznie na zmianie metod uwzględniania ograniczeń. Wyniki zostały zebrane i ze sobą porównane.
 
-W ostatnim rozdziale zebrane są obserwacje poczynione w pracy. Rozdzaił ten, to również wskazanie możliwości poprawy algorytmu CMA-ES.
+Ostatnim rozdziałem jest podsumowanie, które syntetyzuje wyniki badań. Znajdują się tam wnioski wynikające z całej pracy. Rozdział ten zawiera również pomysły, w jaki sposób można poprawić algorytm CMA-ES.
 
 \pagebreak
 
@@ -104,7 +104,7 @@ gdzie:
 \item $x_k^t$ - k-ty punkt iteracji numer t
 \item $m^t$ - wartość oczekiwana rozkładu w iteracji t
 \item $\sigma^t$ - długość kroku iteracji t
-\item $N(p,C)$ - losowanie punktu z rozkładem normalnym o wartości oczekiwanej w punkcie p oraz macierzy kowariancji C
+\item $N(p,C)$ - losowanie punktu z rozkładem normalnym o wartości oczekiwanej w~punkcie p oraz macierzy kowariancji C
 \item $C^t$ - macierz kowariancji iteracji t
 \item $f(x)$ - wartość funkcji w punkcie x
 \item $\lambda$ - wielkość populacji (ilość punktów x w jednej iteracji)
@@ -117,7 +117,7 @@ gdzie:
 \item $d_\sigma \approx 1$ - stała tłumienia
 \item $p_c^t$ - ścieżka ewolucji w iteracji t
 \item $c_c$ - współczynnik nauki macierzy kowariancji
-\item $c_1 \approx \frac{2}{n^2}$ 
+\item $c_1 \approx \frac{2}{n^2}$
 \item $c_\mu \approx min(\frac{\mu_{eff}}{n^2}, 1-c_1)$
 \item $y_{i:\lambda}^{t+1} = \frac{x_{i:\lambda}^{t+1}-m^t}{\sigma^t}$
 \end{itemize}
@@ -199,7 +199,7 @@ Punkt jest powtórnie generowany do momentu, aż spełni ograniczenie kostkowe.
 \end{Verbatim}
 
 \subsubsection{Zawijanie}
-Dla każdej współrzędnej sprawdzane są warunki ograniczeń. W przypadku współrzędnych, na których punkt jest poza ograniczeniem, różnica pomiędzy ograniczeniem a wartością współrzędnej punktu jest zapamiętywana. Tę różnicę odkładamy na przeciwległym ograniczeniu po stronie, która jest wewnątrz ograniczeń. W tym miejscu znajduje się nowa wartość współrzędnej punktu. Z perspektywy punktu nie ma ograniczeń, a przestrzeń przeszukiwań po każdym wymiarze jest jakby "zawinięta".
+Dla każdej współrzędnej sprawdzane są warunki ograniczeń. W przypadku współrzędnych, na których punkt jest poza ograniczeniem, różnica pomiędzy ograniczeniem a~wartością współrzędnej punktu jest zapamiętywana. Tę różnicę odkładamy na przeciwległym ograniczeniu po stronie, która jest wewnątrz ograniczeń. W tym miejscu znajduje się nowa wartość współrzędnej punktu. Z perspektywy punktu nie ma ograniczeń, a przestrzeń przeszukiwań po każdym wymiarze jest jakby "zawinięta".
 
 \begin{Verbatim}[baselinestretch=1.1]
 	dla każdej współrzędnej i
@@ -277,12 +277,12 @@ Dla każdej z metod naprawy przygotowano oddzielny skrypt. Pseudokod skryptu zam
 \end{Verbatim}
 
 \subsection{Wyniki testów}
-Wykresy zamieszczone w tym podrozdziale są 2 rodzajów. Są to wykresy wektorów $\overrightarrow{d}$ wartości oczekiwanych oraz histogramamy wystąpień punktu.
+Wykresy zamieszczone w tym podrozdziale są 2 rodzajów. Są to wykresy wektorów $\overrightarrow{d}$ wartości oczekiwanych oraz histogramy wystąpień punktu.
 
-Histogramy były tworzone poprzez symulację skryptów z liczbą iteracji wynoszącą \mbox{2-100} milionów. Szerokość przedziałów jest różna i była dobierana tak, aby jak najlepiej przedstawić interesujące fakty. Wszystkie wykresy, które pokazdują wyniki błądzenia przypadkowego w dwóch wymiarach zostały przetworzone w następujący sposób: otrzymane wyniki symulacji powielono poprzez symetrzyczne odbicie ich względem osi X, osi Y oraz początku układu współrzędnych. Wykonano ten zabieg, aby zwiększyć dokładność wyników. Nie wpływają one na badania, ponieważ punkty 0 są środkami ograniczeń obu osi, a z perspektywy algorytmu nie ma znaczenia, w której ćwiartce znajduje się aktualnie punkt.
+Histogramy były tworzone poprzez symulację skryptów z liczbą iteracji wynoszącą \mbox{2-100} milionów. Szerokość przedziałów jest różna i była dobierana tak, aby jak najlepiej przedstawić interesujące fakty. Wszystkie wykresy, które pokazują wyniki błądzenia przypadkowego w dwóch wymiarach zostały przetworzone w następujący sposób: otrzymane wyniki symulacji powielono poprzez symetryczne odbicie ich względem osi X, osi Y oraz początku układu współrzędnych. Wykonano ten zabieg, aby zwiększyć dokładność wyników. Nie wpływają one na badania, ponieważ punkty 0 są środkami ograniczeń obu osi, a z perspektywy algorytmu nie ma znaczenia, w której ćwiartce znajduje się aktualnie punkt.
 
 \subsubsection*{Metoda klasyczna}
-Wektory wartości oczewkianych, które są blisko ograniczeń są skierowane od ograniczenia. Histogramy z kolei pokazują, że punkty z większym prawdopodobieństwem występują przy ograniczeniach. Takie zachowanie wynika z tego, że potomkowie punktów blisko granicy mogą "wypaść" poza ograniczenie. Po naprawie dziecko będzie tym samym punktem.
+Wektory wartości oczekiwanych, które są blisko ograniczeń są skierowane od ograniczenia. Histogramy z kolei pokazują, że punkty z większym prawdopodobieństwem występują przy ograniczeniach. Takie zachowanie wynika z tego, że potomkowie punktów blisko granicy mogą "wypaść" poza ograniczenie. Po naprawie dziecko będzie tym samym punktem.
 
 \begin{figure}[H]
 \centering
@@ -307,7 +307,7 @@ Wektory wartości oczewkianych, które są blisko ograniczeń są skierowane od 
 \subsubsection*{Rzutowanie}
 Zgodnie z przewidywaniami największe prawdopodobieństwo wystąpienia punktu jest na ograniczeniu, co bardzo dobrze obrazuje rysunek \ref{bladzenie:rzutowanie2d}. Na rysunkach \ref{bladzenie:rzutowanie1dn} i \ref{bladzenie:rzutowanie1dj} zakres osi~Y został zmniejszony do odpowiednio $[30000;60000]$ oraz $[70000;140000]$, aby uwypuklić interesujące efekty. W związku z tym, wartości przedziałów brzegowych nie są widoczne - były o kilka rzędów wielkości większe od pozostałych wartości.
 
-Warto zwrócić uwagę na niespodziewane zjawisko - wartości przedziałów blisko ograniczeń są mniejsze, niż pozostałe. Oznacza to, że punkty w tych przedziałach występują z mniejszym prawdopodobieństwem, niż pozostałe. Wydawać by się mogło, że powinno być inaczej, ponieważ podczas symulacji punkty często są rzutowane na ograniczenie. Dodatkowo, w rozkładzie jednostajnym widać, że istnieją przedziały, w~których punkty występują z~większym prawdopodobieństwem. Autorowi nie udało się formalnie uzasadnić tego zjawiska. Intuicja prowadzi do hipotezy, że punkty, które znalazły się poza ograniczeniem, bez naprawy po kilku iteracjach zapełniałyby "dołek". Naprawa natomiast sprawia, że cała dalsza symulacja zostaje niejako przesunięta. W~ten sposób powstaje "górka" w~rozkładzie jednostajnym. Brak górki w rozkładzie normalnym można tłumaczyć charakterystyką samego rozkładu - spadek prawdopodobieństwa wraz z oddalaniem się od wartości oczekiwanej.
+Warto zwrócić uwagę na niespodziewane zjawisko - wartości przedziałów blisko ograniczeń są mniejsze, niż pozostałe. Oznacza to, że punkty w tych przedziałach występują z mniejszym prawdopodobieństwem, niż pozostałe. Wydawać by się mogło, że powinno być inaczej, ponieważ podczas symulacji punkty często są rzutowane na ograniczenie. Dodatkowo, w rozkładzie jednostajnym widać, że istnieją przedziały, w~których punkty występują z~większym prawdopodobieństwem. Autorowi nie udało się formalnie uzasadnić tego zjawiska. Intuicja prowadzi do hipotezy, że punkty, które znalazły się poza ograniczeniem, bez naprawy po kilku iteracjach zapełniałyby "dołek". Naprawa natomiast sprawia, że cała dalsza symulacja zostaje niejako przesunięta. W~ten sposób powstaje "górka" w~rozkładzie jednostajnym. Brak górki w rozkładzie normalnym można tłumaczyć charakterystyką samego rozkładu - spadek prawdopodobieństwa wraz z~oddalaniem się od wartości oczekiwanej.
 
 \begin{figure}[H]
 \centering
@@ -446,7 +446,7 @@ Z perspektywy algorytmu CMA-ES warto zwrócić uwagę przede wszystkim na metody
 \pagebreak
 
 \section{Metodyka testowania metod optymalizacji globalnej}
-Funkcje posiadają charakterystyczne cechy, m.in. monotoniczność, liczba ekstremów, ciągłość. Metody optymalizacji globalnej również posiadają swoje charakterystyczne własności. W zależności od przypadku, wymagania stawiane algorytmowi mogą być różne: szybkości działania, przeszukanie całej przestrzeni, czy też dokładne określenie ekstremum. Połączenie tego wszystkiego powoduje, że trudno jednoznacznie określić, która metoda optymalizacji jest najlepsza. Warto jednak posiadać wiedzę w których przypadkach metoda przynosi lepsze rezultaty.
+Funkcje posiadają charakterystyczne cechy, m.in. monotoniczność, liczba ekstremów, ciągłość. Metody optymalizacji globalnej również posiadają swoje charakterystyczne własności. W zależności od przypadku, wymagania stawiane algorytmowi mogą być różne: szybkość działania, przeszukanie całej przestrzeni, czy też dokładne określenie ekstremum. Połączenie tego wszystkiego powoduje, że trudno jednoznacznie określić, która metoda optymalizacji jest najlepsza. Warto jednak posiadać wiedzę w których przypadkach metoda przynosi lepsze rezultaty.
 
 Zapewne zgodziliby się z tym stwierdzeniem twórcy konkursów takich jak CEC, czy BBOB. Tworzą oni szereg funkcji benchmarkowych, które mają na celu empirycznie pokazać silne i słabe strony algorytmów w konkretnych sytuacjach.
 
@@ -454,7 +454,7 @@ Zapewne zgodziliby się z tym stwierdzeniem twórcy konkursów takich jak CEC, c
 Funkcje benchmarkowe, to złożone funkcje. Skomplikowanie polega między innymi na wielu ekstremach funkcji lub specyficznym umieszczeniu minimum globalnego. Dzięki nim można porównać algorytmy.
 
 \subsection{Techniki porównywania wyników}
-Wybranie funkcji benchmarkowych nie wystarczy, aby stwierdzić który z algorytmów ewolucyjnych jest lepszy. Są to algorytmy niedeterministyczne - poszukiwanie rozwiązania za każdym razem będzie wyglądało inaczej nawet przy takich samych parametrach. Oznacz to, że dla wiarygodności wyników należy testy uruchamiać wielokrotnie. Posiadając takie wyniki należy posłużyć się wybraną metodą, aby porównać skuteczność algorytmów. W tej pracy do porównywania został wybrany test Wilcoxona, ponieważ można go użyć do porównywania par obserwacji oraz ten test pokazuje różnice cech.
+Wybranie funkcji benchmarkowych nie wystarczy, aby stwierdzić, który z algorytmów ewolucyjnych jest lepszy. Są to algorytmy niedeterministyczne - poszukiwanie rozwiązania za każdym razem będzie wyglądało inaczej nawet przy takich samych parametrach. Oznacza to, że dla wiarygodności wyników należy testy uruchamiać wielokrotnie. Posiadając takie wyniki należy posłużyć się wybraną metodą, aby porównać skuteczność algorytmów. W tej pracy do porównywania został wybrany test Wilcoxona, ponieważ można go użyć do porównywania par obserwacji oraz ten test pokazuje różnice cech.
 
 \subsubsection*{Test Wilcoxona}
 Test Wilcoxona jest testem nieparametrycznym - nie jest potrzebna wiedza na temat rozkładu populacji \cite{wilcox}. Ten test sprawdza, czy istnieje statycznie istotna różnica między dwoma zbiorami, które były losowane z pewnym rozkładem prawdopodobieństwa. Hipoteza dotyczy median wygenerowanych zbiorów. Hipoteza zerowa $H_0$ brzmi "Różnica median zbiorów wynosi 0". Na podstawie sprawdzenia hipotezy możemy wywnioskować, czy 2 rozkłady prawdopodobieństwa generują dane istotnie różne. Do przedstawienia wyników wielu testów Wilcoxona wykorzystuje się tabele.
@@ -471,7 +471,7 @@ Celem testów będzie sprawdzenie charakterystycznych zachowań macierzy kowaria
 \subsection{Metoda przeprowadzenia testów}
 Do przeprowadzania testów została użyta biblioteka przygotowana przez Nikolausa Hansena, współautora algorytmu CMA-ES. Tak jak w przypadku błądzenia przypadkowego, wykorzystano implementację w języku MATLAB \cite{cmaes_code}.
 
-Testy przeprowadzano poprzez jednokrotne uruchomienie zmodyfikowanego algorytmu CMA-ES na funkcji stałej, losowej oraz kwadratowej. Modyfikacja polegała na usunięciu warunków stopu z pętli głównej algorytmu. Wynikała ona z tego, że po kilku iteracjach algorytm się zatrzymywał. Nie modyfikowano natomiast sposobu uwzględniania ograniczeń. Algorytm był przerywany po kilkuset iteracjach na podstawie logów w konsoli. Wszystkie wygenerowane przez algorytm punkty zostały przedstawione na histogramie (podobnie jak przy błądzeniu przypadkowym).
+Testy przeprowadzano poprzez jednokrotne uruchomienie zmodyfikowanego algorytmu CMA-ES na funkcji stałej, losowej oraz kwadratowej. Modyfikacja polegała na usunięciu warunków stopu z pętli głównej algorytmu. Wynikała ona z tego, że po kilku iteracjach algorytm się zatrzymywał. Nie modyfikowano natomiast sposobu uwzględniania ograniczeń. Algorytm był przerywany po kilkuset iteracjach, gdy logi w konsoli wskazywały na stagnację algorytmu. Wszystkie wygenerowane przez algorytm punkty zostały przedstawione na histogramie (podobnie jak w przypadku błądzenia przypadkowego).
 
 \subsection{Wyniki testów}
 
@@ -510,16 +510,18 @@ Badano funkcję o wzorze $y=x_1^2+x_2^2$. Dla tej funkcji zdecydowano się zmien
 \end{figure}
 
 \subsection{Wnioski}
-Na wykresach, które przedstawiają histogramy punktów podczas symulacji algorytmu CMA-ES na funkcji losowej i stałej, nie udało się zaobserwować żadnych efektów widocznych podczas testowania błądzenia przypadkowego. Autor nie zdecydował się na generowanie wykresów innych metod transformacji rozwiązań, ponieważ nie dałoby to widocznych różnic w wykresach.
+Na wykresach, które przedstawiają histogramy punktów podczas symulacji algorytmu CMA-ES na funkcji losowej i stałej, nie udało się zaobserwować żadnych efektów widocznych podczas testowania błądzenia przypadkowego. Wynika to z faktu zbiegania symulacji do pewnego punktu - również w przypadku funkcji stałej i losowej. Na podstawie tych wyników trudno cokolwiek powiedzieć o zachowaniu się macierzy kowariancji po dotarciu do ograniczeń kostkowych.
+
+Autor nie zdecydował się na generowanie wykresów innych metod transformacji rozwiązań, ponieważ nie dałoby to widocznych różnic w wykresach.
 
 \subsection{Porównanie wariantów transformacji rozwiązań}
-Celem testów było sprawdzenie, czy zmiana technik uwzględniania ograniczeń w algorytmie CMA-ES wpływa na rozwiązanie. Do tego porównania wybrano 6 wariantów transformacji rozwiązań: rzutowanie na ograniczenie (wykorzystywane w implementacji Hansena), reinicjacja, odbijanie, zawijanie, próbkowanie oraz wariant ewolucji darwinowskiej, który został opisane poniżej. Dla wszystkich wariantów uruchomiono symulacje algorytmu CMA-ES.W symulacjach wykorzystano funkcje benchmarkowe z konkursu CEC 2013, których dokładny opis znajduje się tutaj \cite{cec}. Ten zestaw został wybrany ze względu na duże zróżnicowanie funkcji oraz implementację w języku MATLAB, z której skorzystano \cite{cec_code}. Algorytm CMA-ES (dla każdego wariantu uwzględniania ograniczeń) uruchomiono po 25 razy dla każdej funkcji benchmarkowej (funkcje z 30 wymiarami). Algorytm CMA-ES dla każdej symulacji zwrócił najlepszy punkt, który znalazł. W ten sposób dla 28 funkcji uzyskano po 25 wartości. Wyniki zostały porównane testem Wilcoxona, aby sprawdzić, czy w istotny sposób się różnią.
+Celem testów było sprawdzenie, czy zmiana technik uwzględniania ograniczeń w algorytmie CMA-ES wpływa na rozwiązanie. Do tego porównania wybrano 6 wariantów transformacji rozwiązań: rzutowanie na ograniczenie (wykorzystywane w implementacji Hansena), reinicjacja, odbijanie, zawijanie, próbkowanie oraz wariant ewolucji darwinowskiej, który został opisane poniżej. Dla wszystkich wariantów uruchomiono symulacje algorytmu CMA-ES. W symulacjach wykorzystano funkcje benchmarkowe z konkursu CEC 2013, których dokładny opis znajduje się tutaj \cite{cec}. Ten zestaw został wybrany ze względu na duże zróżnicowanie funkcji oraz implementację w języku MATLAB, z której skorzystano \cite{cec_code}. Algorytm CMA-ES (dla każdego wariantu uwzględniania ograniczeń) uruchomiono po 25 razy dla każdej funkcji benchmarkowej (funkcje z 30 wymiarami). Algorytm CMA-ES dla każdej symulacji zwrócił najlepszy punkt, który znalazł. W ten sposób dla 28 funkcji uzyskano po 25 wartości. Wyniki zostały porównane testem Wilcoxona, aby sprawdzić, czy w istotny sposób się różnią.
 
 \subsubsection*{Metoda klasyczna}
-W tych testach nie znalazła się opisywana wcześniej metoda klasyczna. Wynika to z~faktu, że zakłada ona istnienie powiązań między punktami kolejnych iteracji. W~algorytmie CMA-ES wpływ punktów na kolejną iterację jest pośredni i nie ma tutaj klasycznych powiązań typu: rodzic-potomek.
+W tych testach nie znalazła się opisywana wcześniej metoda klasyczna. Wynika to z~faktu, że zakłada ona istnienie powiązań między punktami kolejnych iteracji. W~algorytmie CMA-ES wpływ punktów na kolejną iterację jest pośredni i nie ma tutaj klasycznych relacji rodzic-potomek.
 
 \subsubsection*{Reinicjacja}
-Nieco zmieniona została metoda reinicjaci. Zgodnie z rozdziałem \ref{reinicjacja} cały punkt jest przenoszony do pozycji początkowej, gdy którakolwiek z granic jest przekroczona. Takie podejście w algorytmie CMA-ES sprawiało, że algorytm zatrzymywał się w pozycji początkowej, ponieważ losowanie bardzo często zwracało punkt poza ograniczniami. Zdecydowano się na zmianę tej metody tak, że po przekroczeniu bariery reinicjowane są tylko te wymiary, na których granica została przekroczona. Pozostałe wymiary zostały bez zmian. Obrazuje to poniższy pseudokod:
+W tej metodzie zmieniony został sposób reinicjacji. Zgodnie z rozdziałem \ref{reinicjacja} cały punkt jest przenoszony do pozycji początkowej, gdy którakolwiek z granic jest przekroczona. Takie podejście w algorytmie CMA-ES sprawiało, że algorytm zatrzymywał się w pozycji początkowej, ponieważ losowanie bardzo często zwracało punkt poza ograniczeniami. Zdecydowano się na zmianę tej metody tak, że po przekroczeniu bariery reinicjowane są tylko te wymiary, na których granica została przekroczona. Pozostałe wymiary zostały bez zmian. Obrazuje to poniższy pseudokod:
 
 \begin{Verbatim}[baselinestretch=1.1]
 	dla każdej współrzędnej i
@@ -528,7 +530,7 @@ Nieco zmieniona została metoda reinicjaci. Zgodnie z rozdziałem \ref{reinicjac
 \end{Verbatim}
 
 \subsubsection*{Ewolucja darwinowska}
-Do opisania pozostła wspomniana wcześniej ewolucja darwinowska. W tym wariancie punkt nie jest transformowany wewnątrz ograniczenia. Wartość funkcji celu obliczamy w następujący sposób: kopiujemy punkt, przekształcamy symetrycznie względem tych ograniczeń, które zostały przekroczone, a na koniec obliczamy wartość funkcji dla tego punktu.
+Do opisania pozostała wspomniana wcześniej ewolucja darwinowska. W tym wariancie punkt nie jest transformowany wewnątrz ograniczenia. Wartość funkcji celu obliczamy w następujący sposób: kopiujemy punkt, przekształcamy symetrycznie względem tych ograniczeń, które zostały przekroczone, a na koniec obliczamy wartość funkcji dla tego punktu.
 
 \begin{Verbatim}[baselinestretch=1.1]
 	y = x
@@ -540,45 +542,47 @@ Do opisania pozostła wspomniana wcześniej ewolucja darwinowska. W tym warianci
 \end{Verbatim}
 
 \subsubsection *{Wyniki}
-Wyniki zostały przedstawione w tabeli. Do wariantu podstawowego (rzutowanie) przyrównano wyniki testu Wilcoxona pozostałych 5 wariantów. Kolumny są etykietowane numerami funkcji, natomiast wierze wariantami uwzględniania ograniczeń. Oznaczenia symboli na przecięciach:
+Wyniki zostały zebrane w tabeli. Przedstawia ona porównanie wyników algorytmu CMA-ES z rzutowaniem (wariant podstawowy) do wyników algorytmu CMA-ES z innymi metodami uwzględniania ograniczeń. Wyniki zostały porównane za pomocą testu Wilcoxona. Kolumny są etykietowane numerami funkcji, natomiast wiersze wariantami uwzględniania ograniczeń. Oznaczenia symboli znajdujących się na przecięciach:
 \begin{itemize}[noitemsep]
-\item + oznacza, że wariant podstawowy okazał się lepszy,
-\item - oznacza, że wariant podstawowy okazał się gorszy,
-\item . oznacze, że wyniki obu wariantów różnią się nieznacznie.
+\item + wariant podstawowy jest lepszy,
+\item - wariant podstawowy jest gorszy,
+\item . wyniki wariantów różnią się nieznacznie.
 \end{itemize}
 
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|} \hline
 Numer funkcji & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 \\ \hline
 Reinicjacja & + & . & . & . & . & . & . & . & - & . & . & . & . & - \\ \hline
-Odbijanie & . & . & . & . & . & . & . & . & - & . & . & . & . & .  \\ \hline
-Zawijanie  & . & . & . & . & + & . & . & . & - & . & . & . & . & - \\ \hline
-Próbkowanie  & . & . & . & . & . & . & . & . & - & . & . & . & - & - \\ \hline
-Darwinowska  & . & . & . & + & . & . & - & . & . & . & . & - & . & +  \\ \hline \hline
+Odbijanie & . & . & . & . & . & . & . & . & - & . & . & . & . & . \\ \hline
+Zawijanie & . & . & . & . & + & . & . & . & - & . & . & . & . & - \\ \hline
+Próbkowanie & . & . & . & . & . & . & . & . & - & . & . & . & - & - \\ \hline
+Darwinowska & . & . & . & + & . & . & - & . & . & . & . & - & . & + \\ \hline \hline
 Numer funkcji & 15 & 16 & 17 & 18 & 19 & 20 & 21 & 22 & 23 & 24 & 25 & 26 & 27 & 28 \\ \hline
 Reinicjacja & . & . & + & . & . & . & . & - & . & . & + & . & - & . \\ \hline
-Odbijanie  & . & . & . & . & . & . & . & . & - & . & . & . & . & . \\ \hline
-Zawijanie  & - & . & + & . & . & . & . & - & - & . & + & . & . & . \\ \hline
+Odbijanie & . & . & . & . & . & . & . & . & - & . & . & . & . & . \\ \hline
+Zawijanie & - & . & + & . & . & . & . & - & - & . & + & . & . & . \\ \hline
 Próbkowanie & - & . & + & . & . & . & . & - & - & - & . & . & - & . \\ \hline
 Darwinowska & + & . & . & . & . & . & . & + & + & . & - & . & - & . \\ \hline
 \end{tabular} \\ \\
 
-Powyższe dane pokazują, że wyniki poszczególnych algorytmów nie różnią się znacząco. Należy jednak zwrócić uwagę na wyniki próbkowania. Pokazują one, że wyniki symulacji 8 funkcji zwróciły istotnie lepsze rezulataty, niż dla symulacji z rzutowaniem. Przeciwny rezultat miał miejsce tylko dla symulacji 1 funkcji. Porównanie pozostałych algorytmów do oryginalnej implementacji nie daje wyraźnych różnic.
+Wyniki poszczególnych algorytmów różnią się nieznacznie. Należy jednak zwrócić uwagę na porównanie z metodą próbkowania. Pokazują one, że wyniki symulacji 8 funkcji zwróciły istotnie lepsze rezultaty, niż symulacje z rzutowaniem. Przeciwny rezultat miał miejsce tylko dla symulacji 1 funkcji. Porównanie pozostałych algorytmów do oryginalnej implementacji nie daje wyraźnych różnic.
 
-Warto jeszcze zwrócić, że porównanie ewolucji darwinowskiej daje inne rezultaty, niż pozostałe porównania. Pozostałe porównania posiadają pewne wspólne zachowania (podobne wyniki dla funkcji 9, 14, 17, 22).
+Warto jeszcze zauważyć, że porównanie z algorytmem zawierającym ewolucję darwinowską daje inne rezultaty, niż pozostałe porównania - funkcje 9, 14, 17, 22.
 
 
 \pagebreak
 
 \section{Podsumowanie}
-Celem pracy było sprawdzenie możliwości rozwoju algorytmu CMA-ES w obszarze ograniczeń kostkowych. Cel ten został zrealizowany poprzez teoretyczne rozważania oraz przeprowadzenie testów. Na tej podstawie tych badań wyciągnięto wnioski.
+Celem pracy było sprawdzenie możliwości rozwoju algorytmu CMA-ES w obszarze ograniczeń kostkowych. Cel ten został zrealizowany poprzez teoretyczne rozważania oraz przeprowadzenie testów.
 
 \subsection{Wnioski}
-Pierwszym wnioskiem jest fakt, że ograniczenia kostkowe wpływają na rozkład prawdopodobieństw symulacji. Oznacz to, że połączenie pewnych funkcji i ograniczeń kostkowych da lepsze rezulataty.
+Ograniczenia kostkowe wpływają na rozkład prawdopodobieństw symulacji. Oznacz to, że połączenie pewnych funkcji i ograniczeń kostkowych da lepsze rezultaty. Różnice nie są jednak znaczące, więc w większości przypadków narzut związany z implementacją oraz przetwarzaniem danych będzie zbyt wysoki w odniesieniu do poprawy wyników.
 
-Kolejnym wnioskiem jest to, że próbkowanie daje lepsze rezultaty od rzutowania w algorytmie CMA-ES. Należy jednak pamiętać, że próbkowanie jest bardziej czasochłonne ze względu na konieczność ponowne losowania punktów.
+Kolejnym wnioskiem jest to, że próbkowanie daje lepsze rezultaty od rzutowania w algorytmie CMA-ES. Należy jednak pamiętać, że próbkowanie jest bardziej czasochłonne ze względu na konieczność ponownego losowania punktów.
+
+W niniejszej pracy nie udało się sprawdzić zachowania macierzy kowariancji przy ograniczeniach. Taka informacja ułatwiłaby stworzenie koncepcji poprawy algorytmu CMA-ES.
 
 \subsection{Możliwości rozwoju}
-
+Przedstawione rozważania mogą posłużyć jako baza do stworzenia nowych wersji algorytmu CMA-ES. Nowy algorytm mógłby w zależności od aktualnych parametrów (położenie wartości oczekiwanej rozkładu, długość kroku, itp.) dobierać odpowiednią metodę uwzględniania ograniczeń.
 
 \pagebreak
 
@@ -622,5 +626,3 @@ Kolejnym wnioskiem jest to, że próbkowanie daje lepsze rezultaty od rzutowania
 \makestatement
 
 \end{document}
-
-
