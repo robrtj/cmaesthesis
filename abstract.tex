@@ -1,0 +1,45 @@
+\documentclass{mini}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyvrb}
+\usepackage{amsmath}
+\usepackage{subfig}
+\newcommand{\degree}{\ensuremath{^\circ}}
+\newcommand{\hilight}[1]{\colorbox{yellow}{#1}}
+\linespread{1.5}
+\newcommand{\CMAES}{\mbox{CMA-ES}}
+\DeclareUnicodeCharacter{00A0}{~}
+
+%------------------------------------------------------------------------------%
+\title{Analiza możliwości wykorzystania w~algorytmie CMA-ES wiedzy o~ograniczeniach kostkowych}
+\titleeng{Verification of possible improvement of the CMA-ES algorithm by modeling the box constraint handling technique}
+
+\author{inż. Robert Jakubowski}
+\supervisor{dr hab. inż. Jarosław Arabas prof. nzw. PW}
+\type{magisters}
+\monthyear{Maj 2016}
+\date{\today}
+\album{237545}
+%------------------------------------------------------------------------------%
+\begin{document}
+
+\raggedbottom
+\pagenumbering{gobble}
+
+\section*{Abstract}
+\hspace{3,4ex}This thesis discusses constraints methods in the CMA-ES algorithm. It describes examination of various methods influence to quality of optimization results.
+
+The introduction presents examinations target and subject. Whole chapter can be treated as thesis motivation.
+
+The following chapter describes the CMA-ES algorithm. This description is necessary to understand the algorithm and conduct examinations. While it starts with a~pseudocode, proceeding sections focus on explanation of main parts of the algorithm.
+
+In the next chapter constraints handling techniques are described. Besides methods description, their influence on algorithm results is presented. Random walk was used to achieve this goal. Random walk with various variants of constraints handling was implemented. After that there was conducted a set of tests examining probability distribution and expected value.
+
+The subsequent chapter describes ways of global optimization algorithms testing. It is necessary to prepare particular collections of benchmark functions, which examine algorithms effectiveness. This part contains also introduction to a Wilcoxon test, which is used for comparing benchmark functions results.
+
+Described testing methods are used in the penultimate chapter to present tests conducted on the CMA-ES algorithm with modifications. These modifications depend only on change of constraints handling techniques. This tests goal is to show behaviour of the CMA-ES algorithm when function has constraints. Moreover it should show which variant returns better outcomes. Results of tests are gathered and discussed.
+
+The last chapter summarizes results of work and presents conclusions. Possibilities of another examinations and ideas for further improvement of the CME-ES algorithm are provided at the end.
+
+\pagebreak
+
+\end{document}

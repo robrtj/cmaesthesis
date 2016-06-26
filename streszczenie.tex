@@ -1,0 +1,45 @@
+\documentclass{mini}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyvrb}
+\usepackage{amsmath}
+\usepackage{subfig}
+\newcommand{\degree}{\ensuremath{^\circ}}
+\newcommand{\hilight}[1]{\colorbox{yellow}{#1}}
+\linespread{1.5}
+\newcommand{\CMAES}{\mbox{CMA-ES}}
+\DeclareUnicodeCharacter{00A0}{~}
+
+%------------------------------------------------------------------------------%
+\title{Analiza możliwości wykorzystania w~algorytmie CMA-ES wiedzy o~ograniczeniach kostkowych}
+\titleeng{Verification of possible improvement of the CMA-ES algorithm by modeling the box constraint handling technique}
+
+\author{inż. Robert Jakubowski}
+\supervisor{dr hab. inż. Jarosław Arabas prof. nzw. PW}
+\type{magisters}
+\monthyear{Maj 2016}
+\date{\today}
+\album{237545}
+%------------------------------------------------------------------------------%
+\begin{document}
+
+\raggedbottom
+\pagenumbering{gobble}
+
+\section*{Streszczenie}
+\hspace{3,4ex}Niniejsza praca poświęcona jest badaniu wpływu różnych metod uwzględniania ograniczeń w algorytmie CMA-ES na jakość uzyskiwanych wyników optymalizacji.
+
+We wstępie zaczynając od zarysowania kontekstu problemu przedstawiony został przedmiot badań i cel pracy. Cały rozdział można potraktować jako motywację do pracy.
+
+Następnie opisano sam algorytm CMA-ES. Opisanie tego algorytmu jest niezbędne do zrozumienie jego mechanizmów, a w konsekwencji do przeprowadzenia badań. Zaczynając od przedstawienia pseudokodu, kolejne podrozdziały skupiają się na wyjaśnieniu istoty poszczególnych fragmentów algorytmu. 
+
+W kolejnym rozdziale opisano techniki uwzględniania ograniczeń. Zawarto tam nie tylko opisy poszczególnych metod, ale również pokazano w sposób empiryczny jak mogą wpływać na algorytmy. W tym celu użyto algorytmu błądzenia przypadkowego. Zaimplementowano ten algorytm z różnymi wariantami uwzględniania ograniczeń, a~następnie przeprowadzono szereg testów badających między innymi rozkłady prawdopodobieństw oraz wartości oczekiwanych.
+
+Następny rozdział opisuje sposoby, w jaki mogą być testowane algorytmy optymalizacji globalnej. Niezbędne do testowania są specjalnie przygotowane zbiory funkcji benchmarkowych, które badają skuteczność algorytmów. W tej części przedstawiono również test Wilcoxona, który wykorzystuje się do porównania wyników funkcji benchmarkowych.
+
+Opisane metody testowania zostały użyte w przedostatnim rozdziale, który przedstawia testy wykonane na algorytmie CMA-ES oraz jego modyfikacjach. Modyfikacje polegały wyłącznie na zmianie metod uwzględniania ograniczeń. Testy te mają na celu pokazanie zachowania algorytmu CMA-ES, gdy uruchamiana funkcja posiada ograniczenia oraz ukazanie, który wariant zwraca lepsze rezultaty. Wyniki tych testów zostały zebrane oraz omówione.
+
+W ostatnim rozdziale podsumowane zostają wyniki pracy oraz wnioski z niej wynikające. Zaproponowane są również możliwe dalsze kierunki badań i rozwoju algorytmu CMA-ES mające poprawić jego działanie.
+
+\pagebreak
+
+\end{document}

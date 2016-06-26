@@ -85,6 +85,8 @@
 %------------------------------------------------------------------------------%
 \def\title#1{\gdef\@title{#1}\hypersetup{pdftitle={#1}}}
 \def\@title{\@latex@error{No title given}\@ehc}
+\def\titleeng#1{\gdef\@titleeng{#1}\hypersetup{pdftitle={#1}}}
+\def\@titleeng{\@latex@error{No title given}\@ehc}
 \def\author#1{\gdef\@author{#1}\hypersetup{pdfauthor={#1}}}
 \def\@author{\@latex@error{No author given}\@ehc}
 \def\supervisor#1{\gdef\@supervisor{#1}}
@@ -181,6 +183,10 @@
     \textbf{\Large\MakeUppercase{\@title}}
   \end{spacing}
   \vfill
+  \begin{spacing}{1.3}
+    \textbf{\Large\MakeUppercase{\@titleeng}}
+  \end{spacing}
+  \vfill
 \end{center}
 \hspace{.5\textwidth}
 \begin{minipage}[t][70mm]{.5\textwidth}
@@ -222,7 +228,7 @@ Warszawa, dnia ..................
   {\Large O{\'s}wiadczenie}
 \end{center}
 \par\vspace{15mm}
-O{\'s}wiadczam, {\.z}e prac{\k e} \@type k{\k a} pod
+O{\'s}wiadczam, {\.z}e moj{\k a} prac{\k e} \@type k{\k a} pod
 tytu{\l}em ,,\@title'', kt{\'o}rej promotorem jest \@supervisor, wykona{\l}{\ifthenelse{\boolean{lady}}{a}{e}}m
 samodzielnie, co po{\'s}wiadczam w{\l}asnor{\k e}cznym podpisem.
 \vspace{15mm}

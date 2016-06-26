@@ -11,6 +11,7 @@
 
 %------------------------------------------------------------------------------%
 \title{Analiza możliwości wykorzystania w~algorytmie CMA-ES wiedzy o~ograniczeniach kostkowych}
+\titleeng{Verification of possible improvement of the CMA-ES algorithm by modeling the box constraint handling technique}
 
 \author{inż. Robert Jakubowski}
 \supervisor{dr hab. inż. Jarosław Arabas prof. nzw. PW}
@@ -43,7 +44,7 @@ We wstępie zaczynając od zarysowania kontekstu problemu przedstawiony został 
 
 Następnie opisano sam algorytm CMA-ES. Opisanie tego algorytmu jest niezbędne do zrozumienie jego mechanizmów, a w konsekwencji do przeprowadzenia badań. Zaczynając od przedstawienia pseudokodu, kolejne podrozdziały skupiają się na wyjaśnieniu istoty poszczególnych fragmentów algorytmu. 
 
-W kolejnym rozdziale opisano techniki uwzględniania ograniczeń. Zawarto tam nie tylko opisy poszczególnych metod, ale również pokazano w sposób empiryczny jak mogą wpływać na algorytmy. W tym celu użyto algorytmu błądzenia przypadkowego. Zaimplementowano ten algorytm z różnymi wariantami uwzględniania ograniczeń, a następnie przeprowadzono szereg testów badających między innymi rozkłady prawdopodobieństw oraz wartości oczekiwanych.
+W kolejnym rozdziale opisano techniki uwzględniania ograniczeń. Zawarto tam nie tylko opisy poszczególnych metod, ale również pokazano w sposób empiryczny jak mogą wpływać na algorytmy. W tym celu użyto algorytmu błądzenia przypadkowego. Zaimplementowano ten algorytm z różnymi wariantami uwzględniania ograniczeń, a~następnie przeprowadzono szereg testów badających między innymi rozkłady prawdopodobieństw oraz wartości oczekiwanych.
 
 Następny rozdział opisuje sposoby, w jaki mogą być testowane algorytmy optymalizacji globalnej. Niezbędne do testowania są specjalnie przygotowane zbiory funkcji benchmarkowych, które badają skuteczność algorytmów. W tej części przedstawiono również test Wilcoxona, który wykorzystuje się do porównania wyników funkcji benchmarkowych.
 
@@ -57,38 +58,38 @@ CMA-ES, uwzględnianie ograniczeń, algorytmy ewolucyjne, ograniczenia kostkowe,
 \pagebreak
 
 \section{Abstract}
-\hspace{3,4ex}This thesis discusses constraints methods in CMA-ES algorithm. It describes examination of various methods influence to quality of optimization results.
+\hspace{3,4ex}This thesis discusses constraints methods in the CMA-ES algorithm. It describes examination of various methods influence to quality of optimization results.
 
-Introduction presents examinations target and subject. Whole chapter can be treated as thesis motivation.
+The introduction presents examinations target and subject. Whole chapter can be treated as thesis motivation.
 
-The following chapter describes CMA-ES algorithm. This description is necessary to understand the algorithm and conduct examinations. While it starts with pseudocode, proceeding sections focus on explanation of main parts of algorithm.
+The following chapter describes the CMA-ES algorithm. This description is necessary to understand the algorithm and conduct examinations. While it starts with a~pseudocode, proceeding sections focus on explanation of main parts of the algorithm.
 
-In the next chapter constraints handling techniques are described. Besides methods description, their influence on algorithm results is presented. Random walk was used to achieve this goal. Random walk with various variants of constraints handling was implemented. After that there was conducted set of tests examinating probability distribution and expected value.
+In the next chapter constraints handling techniques are described. Besides methods description, their influence on algorithm results is presented. Random walk was used to achieve this goal. Random walk with various variants of constraints handling was implemented. After that there was conducted a set of tests examining probability distribution and expected value.
 
-Subsequent chapter describes ways of global optimization algorithms testing. It is necessary to prepare particular collections of benchmark functions, which examines algorithms effectiveness. This part contains also introduction to Wilcoxon test, which is used for comparing benchmark functions results.
+The subsequent chapter describes ways of global optimization algorithms testing. It is necessary to prepare particular collections of benchmark functions, which examine algorithms effectiveness. This part contains also introduction to a Wilcoxon test, which is used for comparing benchmark functions results.
 
-Described testing methods are used in penultimate chapter to present tests conducted on CMA-ES algorithm with modifications. This modifications depends only on change of constraints handling techniques. This tests goal is to show behaviour of CMA-ES algorithm when function has constraints. Moreover it should show which variant returns better outcomes. Results of tests are gathered and discussed.
+Described testing methods are used in the penultimate chapter to present tests conducted on the CMA-ES algorithm with modifications. These modifications depend only on change of constraints handling techniques. This tests goal is to show behaviour of the CMA-ES algorithm when function has constraints. Moreover it should show which variant returns better outcomes. Results of tests are gathered and discussed.
 
-The last chapter summarizes results of work and presents conclusions. Possibilities of another examinations and ideas for further improvement of CME-ES algorithm are provided at the end.
+The last chapter summarizes results of work and presents conclusions. Possibilities of another examinations and ideas for further improvement of the CME-ES algorithm are provided at the end.
 
 \subsubsection*{Keywords}
-CMA-ES, constraints handling, evolutionary algorithm, box constraint, optimalization
+CMA-ES, constraints handling, evolutionary algorithm, box constraint, optimization
 
 \pagebreak
 
 \section{Wstęp}
-\hspace{3,4ex}Algorytmy ewolucyjne wykorzystuje się głównie w problemach poszukiwania optimum funkcji celu z wieloma zmiennymi, np. w planowaniu procesów przemysłowych.\cite{zast} W~większości algorytmów ewolucyjnych rozkład prawdopodobieństwa generowanych punktów nie zmienia się w trakcie symulacji algorytmu. Z~tego faktu wynika problem ustalenia parametrów początkowych, np. wariancji rozkładu prawdopodobieństwa generowanych punktów. Ustalenie zbyt niskiej wartości wariancji może prowadzić do znalezienia jedynie pewnego optimum lokalnego, natomiast ustalenie zbyt dużej wartości wariancji sprawia, że trudno znaleźć algorytmowi optimum globalne.
+\hspace{3,4ex}Algorytmy ewolucyjne wykorzystuje się głównie w problemach poszukiwania optimum funkcji celu z wieloma zmiennymi, np. w planowaniu procesów przemysłowych \cite{zast}. W~większości algorytmów ewolucyjnych rozkład prawdopodobieństwa generowanych punktów nie zmienia się w trakcie symulacji algorytmu. Z~tego faktu wynika problem ustalenia parametrów początkowych, np. wariancji rozkładu prawdopodobieństwa generowanych punktów. Ustalenie zbyt niskiej wartości wariancji może prowadzić do znalezienia jedynie pewnego optimum lokalnego, natomiast ustalenie zbyt dużej wartości wariancji sprawia, że trudno znaleźć algorytmowi optimum globalne.
 
 Naprzeciw problemowi ustalenia wariancji wychodzi algorytm CMA-ES. Już samo rozwinięcie akronimu CMA-ES mówi o tym: Covariance Matrix Adaptation - Evolution Strategy (strategia ewolucyjna z adaptacją macierzy kowariancji). Jest to algorytm oparty na technikach ewolucyjnych, aczkolwiek punkty losowane są na podstawie macierzy kowariancji (wielowymiarowe uogólnienie wariancji), która jest w każdej iteracji dostosowywana do aktualnej sytuacji przeszukiwań. Takie rozwiązanie sprawia, że dobór parametrów początkowych nie jest tak istotny jak w innych algorytmach ewolucyjnych.
 
-Mimo kilkunastu lat istnienia algorytmu CMA-ES, podejmowane są kolejne próby jego optymalizacji (\cite{magist}\cite{lcmaes}). Warto jednocześnie pamiętać, że w większości wariantów algorytmu CMA-ES trudno mówić o uniwersalnej optymalizacji. Zazwyczaj poprawa w pewnej grupie funkcji skutkuje pogorszeniem wyników w innym rodzaju funkcji.
+Mimo kilkunastu lat istnienia algorytmu CMA-ES, podejmowane są kolejne próby jego optymalizacji \cite{magist} \cite{lcmaes}. Warto jednocześnie pamiętać, że w większości wariantów algorytmu CMA-ES trudno mówić o uniwersalnej optymalizacji. Zazwyczaj poprawa w pewnej grupie funkcji skutkuje pogorszeniem wyników w innym rodzaju funkcji.
 
 Ta praca zawiera badania, które mogą być pomocą podczas optymalizacji algorytmu CMA-ES skoncentrowanej na ograniczeniach kostkowych. Algorytm CMA-ES został stworzony głównie do problemów bez ograniczeń. Można go jednak stosować również do problemów z ograniczeniami, a w literaturze trudno znaleźć prace poświęcone temu zagadnieniu. Warto to zbadać, ponieważ ograniczenia napotykamy w wielu problemach - materiały mają wytrzymałość, komputery skończoną pamięć, a czasem ogranicza prędkość światła.
 
 W aktualnej wersji algorytmu CMA-ES punkty, które znajdą się poza ograniczeniem, są na to ograniczenie rzutowane (o rzutowaniu można przeczytać w rozdziale \ref{secrzut}). Jest to tylko jedna z metod uwzględniania ograniczeń. Warto zauważyć, że zamiast rzutować punkt na ograniczenie, można go reinicjować, powtórnie losować, czy też przekształcić symetrycznie względem ograniczeń, co omówiono dokładniej w rozdziale \ref{technikiogr}.
 
 \subsection*{Cel pracy}
-\hspace{3,4ex}Celem pracy jest weryfikacja wpływu uwzględniania ograniczeń na algorytm \CMAES. Zbadanych będzie kilka metod uwzględniania ograniczeń. Cel będzie realizowany poprzez analizę eksperymentalną.
+\hspace{3,4ex}Celem pracy jest weryfikacja wpływu uwzględniania ograniczeń na algorytm CMA-ES. Zbadanych będzie kilka metod uwzględniania ograniczeń. Cel będzie realizowany poprzez analizę eksperymentalną.
 
 \pagebreak
 
@@ -147,7 +148,7 @@ gdzie:
 Najważniejsze części algorytmu są opisane poniżej w następującej kolejności: macierz kowariancji, wartość oczekiwana rozkładu, długość kroku, generowanie punktów, selekcja punktów.
 
 \subsection{Macierz kowariancji} \label{macierz}
-\hspace{3,4ex}Punkty w algorytmie CMA-ES są generowanie poprzez losowanie na podstawie macierzy kowariancji $C^t$ zgodnie ze wzorem (1). Oznacza to, że nie istnieje bezpośredni związek pomiędzy punktami kolejnych iteracji - w~klasycznych algorytmach ewolucyjnych zazwyczaj można było mówić o rodzicach wygenerowanego punktu. Punkty wpływają jednak na macierz kowariancji, a pośrednio przez nią na kolejną generację punktów. Odbywa się to w~następujący sposób: spośród wszystkich punktów wybiera się $\mu$ punktów (zazwyczaj połowę), która zwraca lepsze wartości funkcji celu. Następnie przypisuje się im wagi $w$ - w~zależności od tego, jak dobry jest punkt. Na postawie tych danych wyznaczana jest empiryczna macierz kowariancji (6-7).
+\hspace{3,4ex}Punkty w algorytmie CMA-ES są generowanie poprzez losowanie na podstawie macierzy kowariancji $C^t$ zgodnie ze wzorem (1). Oznacza to, że nie istnieje bezpośredni związek pomiędzy punktami kolejnych iteracji - w~klasycznych algorytmach ewolucyjnych zazwyczaj można było mówić o rodzicach wygenerowanego punktu. Punkty wpływają jednak na macierz kowariancji, a pośrednio przez nią na kolejną generację punktów. Odbywa się to w~następujący sposób: spośród wszystkich punktów wybiera się $\mu$ punktów (zazwyczaj połowę), która zwraca lepsze wartości funkcji celu. Następnie przypisuje się im wagi $w$ - w~zależności od tego, jak dobry jest punkt. Na podstawie tych danych wyznaczana jest empiryczna macierz kowariancji (6-7).
 
 \subsection{Wartość oczekiwana rozkładu} \label{wartoscoczekiwana}
 \hspace{3,4ex}Punkty generowane są na podstawie rozkładu określonego macierzą kowariancji. Sama macierz nie mówi jednak nic o wartości oczekiwanej. Wymaga to oddzielnego wyznaczenia tej wartości(3).
@@ -482,7 +483,7 @@ Zbiory te zawierają zarówno funkcje jednomodalne, jak i wielomodalne o różny
 
 Wybranie funkcji benchmarkowych nie wystarczy, aby stwierdzić, który z algorytmów ewolucyjnych jest lepszy. Są to algorytmy niedeterministyczne - poszukiwanie rozwiązania za każdym razem będzie wyglądało inaczej nawet przy takich samych parametrach. Oznacza to, że dla wiarygodności wyników należy testy uruchamiać wielokrotnie. Posiadając takie wyniki należy posłużyć się wybraną metodą, aby porównać skuteczność algorytmów. W tej pracy do porównywania został wybrany test Wilcoxona, ponieważ można go użyć do porównywania par obserwacji.
 
-Test Wilcoxona jest testem nieparametrycznym - nie jest potrzebna wiedza na temat rozkładu populacji \cite{wilcox}. Ten test sprawdza, czy istnieje statycznie istotna różnica między dwoma zbiorami, które były losowane z pewnym rozkładem prawdopodobieństwa. Hipoteza dotyczy median wygenerowanych zbiorów. Hipoteza zerowa $H_0$ brzmi "Różnica median zbiorów wynosi 0". Na podstawie sprawdzenia hipotezy możemy wywnioskować, czy dwa rozkłady prawdopodobieństwa generują dane istotnie różne.
+Test Wilcoxona jest testem nieparametrycznym - nie jest potrzebna wiedza na temat rozkładu populacji \cite{wilcox}. Ten test sprawdza, czy istnieje statystycznie istotna różnica między dwoma zbiorami, które były losowane z pewnym rozkładem prawdopodobieństwa. Hipoteza dotyczy median wygenerowanych zbiorów. Hipoteza zerowa $H_0$ brzmi "Różnica median zbiorów wynosi 0". Na podstawie sprawdzenia hipotezy możemy wywnioskować, czy dwa rozkłady prawdopodobieństwa generują dane istotnie różne.
 
 Do przedstawienia wyników wielu testów Wilcoxona wykorzystuje się tabele. Taka tabela zazwyczaj zawiera etykiety porównywanych zbiorów w wierszach i kolumnach, a na przecięciach znajduje się wynik testu.
 
@@ -497,7 +498,7 @@ Celem testów będzie sprawdzenie charakterystycznych zachowań macierzy kowaria
 
 Przeprowadzone zostały dwa testy. W pierwszym z nich uruchamiano jednorazowo algorytm CMA-ES z różnymi modyfikacjami zbierając położenia generowanych punktów. Drugi test polegał na wielokrotnym uruchomieniu każdej z przygotowanych modyfikacji. Wyniki symulacji zostały porównane testem Wilcoxona.
 
-Testy zostały oparte na bibliotece przygotowanej przez Nikolausa Hansena. Tak jak w przypadku błądzenia przypadkowego, wykorzystano implementację w języku MATLAB \cite{cmaes_code}. Wspomniana biblioteka była modyfikowana w celu zrealizowania testów.
+Testy zostały oparte na bibliotece przygotowanej przez Nikolausa Hansena. Tak jak w przypadku błądzenia przypadkowego, wykorzystano implementację w języku \mbox{MATLAB} \cite{cmaes_code}. Wspomniana biblioteka była modyfikowana w celu zrealizowania testów.
 
 \subsection{Ilustracja zbioru punktów generowanych przez algorytm CMA-ES z użyciem różnych metod uwzględniania ograniczeń}
 
@@ -533,7 +534,7 @@ Przeprowadzono testy, w których algorytm posiadał ograniczenie [-3; 3] na obu 
 \end{figure}
 
 \subsubsection*{Funkcja kwadratowa dwuwymiarowa}
-\hspace{3,4ex}Badano funkcję o wzorze $y=x_1^2+x_2^2$. Dla tej funkcji zbiór dopuszczalny zawierał punkty o współrzędnych z zakresu [-0,1;3] na obu wymiarach.Takie ograniczenie zostały wybrane, aby minimum funkcji było blisko narożnika ograniczenia. Takie położenie miało pokazać jak się zachowuje CMA-ES blisko ograniczenia.
+\hspace{3,4ex}Badano funkcję o wzorze $y=x_1^2+x_2^2$. Dla tej funkcji zbiór dopuszczalny zawierał punkty o współrzędnych z zakresu [-0,1;3] na obu wymiarach. Takie ograniczenie zostały wybrane, aby minimum funkcji było blisko narożnika ograniczenia. Takie położenie miało pokazać jak się zachowuje CMA-ES blisko ograniczenia.
 
 Początkowa wartość oczekiwana wynosiła [2;2].Wykres dla tak przygotowanej symulacji znajduje się na rysunku \ref{cmaes:x2} (oś~Z została obcięta do przedziału [0;10]).
 
@@ -552,14 +553,14 @@ Autor nie zdecydował się na generowanie wykresów innych metod transformacji r
 \subsection{Porównanie wariantów transformacji rozwiązań}
 
 \subsubsection{Sposób przeprowadzania testów}
-\hspace{3,4ex}Celem testów było sprawdzenie, czy wybór techniki uwzględniania ograniczeń w algorytmie CMA-ES wpływa na jakość rozwiązań generowanych przez algorytm.
+\hspace{3,4ex}Celem testów było sprawdzenie, czy wybór techniki uwzględniania ograniczeń w~algorytmie CMA-ES wpływa na jakość rozwiązań generowanych przez algorytm.
 
 Najpierw porównano zaimplementowany przez Hansena wariant z rzutowaniem na ograniczenia oraz wariant ewolucji darwinowskiej opisany poniżej. Do kolejnego porównania wybrano 5 wariantów transformacji rozwiązań: rzutowanie na ograniczenie, reinicjacja, odbijanie, zawijanie oraz powtórna generacja.
 
-Dla wszystkich wariantów uruchomiono symulacje algorytmu CMA-ES. W symulacjach wykorzystano funkcje benchmarkowe z konkursu CEC 2013, których dokładny opis znajduje się tutaj \cite{cec}. Ten zestaw został wybrany ze względu na duże zróżnicowanie funkcji oraz implementację w języku MATLAB, z której skorzystano \cite{cec_code}. Algorytm CMA-ES (dla każdego wariantu uwzględniania ograniczeń) uruchomiono po 25 razy dla każdej funkcji benchmarkowej. Do porównań wybrano funkcje z 30 wymiarami. Algorytm CMA-ES dla każdej symulacji zwrócił najlepszy punkt, który znalazł. W ten sposób dla 28 funkcji uzyskano po 25 wartości. Wyniki zostały porównane testem Wilcoxona, aby sprawdzić, czy w istotny sposób się różnią.
+Dla wszystkich wariantów uruchomiono symulacje algorytmu CMA-ES. W symulacjach wykorzystano funkcje benchmarkowe z konkursu CEC 2013, których dokładny opis znajduje się tutaj \cite{cec}. Ten zestaw został wybrany ze względu na duże zróżnicowanie funkcji oraz implementację w języku MATLAB, z której skorzystano \cite{cec_code}. Algorytm CMA-ES (dla każdego wariantu uwzględniania ograniczeń) uruchomiono po 25 razy dla każdej funkcji benchmarkowej. Do porównań wybrano funkcje z 30 wymiarami. Algorytm CMA-ES dla każdej symulacji zwrócił najlepszy punkt, który znalazł. W~ten sposób dla 28 funkcji uzyskano po 25 wartości. Wyniki zostały porównane testem Wilcoxona, aby sprawdzić, czy w istotny sposób się różnią.
 
 \subsubsection*{Ewolucja darwinowska}
-\hspace{3,4ex}Do opisania pozostała wspomniana wcześniej ewolucja darwinowska. W tym wariancie punkt nie jest transformowany wewnątrz ograniczenia - jego współrzędne są niezmienne podczas transformacji. Transformacji podlega wartość funkcji. Jest ona taka, jak gdyby punkt został transformowany w ustalony sposób.
+\hspace{3,4ex}W ewolucji darwinowskiej punkt nie jest transformowany wewnątrz ograniczenia - jego współrzędne są niezmienne podczas transformacji. Transformacji podlega wartość funkcji. Jest ona taka, jak gdyby punkt został transformowany w ustalony sposób.
 
 W poniższych testach użyto ewolucji darwinowskiej z rzutowaniem na ograniczenie.
 
@@ -576,7 +577,7 @@ dla każdej współrzędnej i
 \end{Verbatim}
 
 \subsubsection{Wyniki testów i wnioski}
-\hspace{3,4ex}Wyniki zostały zebrane w tabeli. Przedstawia ona porównanie wyników algorytmu CMA-ES z rzutowaniem (wariant podstawowy) do wyników algorytmu CMA-ES z innymi metodami uwzględniania ograniczeń. Wyniki zostały porównane za pomocą testu Wilcoxona. Kolumny są etykietowane numerami funkcji, natomiast wiersze wariantami uwzględniania ograniczeń. Oznaczenia symboli znajdujących się na przecięciach:
+\hspace{3,4ex}Wyniki zostały zebrane w dwóch tabelach. Przedstawiają ona porównanie wyników algorytmu CMA-ES z rzutowaniem (wariant podstawowy) do wyników algorytmu CMA-ES z innymi metodami uwzględniania ograniczeń. Wyniki zostały porównane za pomocą testu Wilcoxona. Kolumny są etykietowane numerami funkcji, natomiast wiersze wariantami uwzględniania ograniczeń. Oznaczenia symboli znajdujących się na przecięciach:
 \begin{itemize}[noitemsep]
 \item --- wariant podstawowy zwrócił statystycznie lepsze wyniki,
 \item + wariant podstawowy zwrócił statystycznie gorsze wyniki,
@@ -590,7 +591,7 @@ Darwinowska & --- & --- & --- & --- & --- & --- & --- & . & --- & --- & --- & --
 Numer funkcji & 15 & 16 & 17 & 18 & 19 & 20 & 21 & 22 & 23 & 24 & 25 & 26 & 27 & 28 \\ \hline
 Darwinowska & --- & . & --- & --- & --- & . & --- & --- & --- & --- & --- & --- & --- & --- \\ \hline
 \end{tabular}
-\caption{Porównanie testem Wilcoxona wyników zwracanych przez algorytm CMA-ES w wariancie podstawowym z wynikami zwracanymi przez algorytm CMA-ES w wariancie darwinowskim}
+\caption{Porównanie testem Wilcoxona wyników zwracanych przez algorytm CMA-ES w wariancie podstawowym z wynikami zwracanymi przez algorytm CMA-ES w~wariancie darwinowskim}
 \end{table}
 
 \begin{table}[H]
@@ -617,7 +618,7 @@ Zdecydowanie najlepsze rezultaty zwróciła metoda powtórnej generacji - dla 8 
 
 Metody, które wypadły najlepiej (odbicie i powtórna generacja), sprawiają że średnie przesunięcie punktu nie jest znaczące - można to zauważyć na wykresach wektorów przesunięć w rozdziale \ref{technikiogr}. Można więc wywnioskować, że nie warto zbytnio ingerować w położenie punktu. Na tak postawiony wniosek można podać kontrprzykład z rzutowaniem, które wypadło gorzej. Warto jednak przypomnieć sobie rysunek \ref{bladzenie:rzutowanie2d}, który pokazywał, że w rzutowaniu rozkład prawdopodobieństwa punktów jest bardzo zaburzony, co prowadzi do mniejszej eksploracji przestrzeni. Z tego też względu można upatrywać słabszych wyników rzutowania.
 
-Interesujący jest również fakt, że dla niektórych funkcje (9, 14, 17, 22) porównania wyglądają podobnie. Takie wyniki pokazują, że nie istnieje jeden, najlepszy wariant dla każdej funkcji.
+Interesujący jest również fakt, że dla niektórych funkcji (9, 14, 17, 22) porównania wyglądają podobnie. Takie wyniki pokazują, że nie istnieje jeden, najlepszy wariant dla każdej funkcji.
 
 
 \pagebreak
@@ -626,9 +627,9 @@ Interesujący jest również fakt, że dla niektórych funkcje (9, 14, 17, 22) p
 \hspace{3,4ex}Celem pracy była weryfikacja wpływu uwzględniania ograniczeń kostkowych w algorytmie CMA-ES. Cel ten został zrealizowany poprzez teoretyczne rozważania oraz przeprowadzenie testów.
 
 \subsection{Wnioski}
-\hspace{3,4ex}Metoda uwzględnienia ograniczeń kostkowych wpływa na wyniki symulacji algorytmu CMA-ES. Ponadto połączenie pewnych funkcji i ograniczeń daje lepsze rezultaty. Z tych faktów wynika, że czasem warto zadać sobie trud nad wyborem metody uwzględniania ograniczeń, a nawet do tego samego uruchomić kilka symulacji z różnymi metodami.
+\hspace{3,4ex}Metoda uwzględnienia ograniczeń kostkowych wpływa na wyniki symulacji algorytmu CMA-ES. Ponadto połączenie pewnych funkcji i ograniczeń daje lepsze rezultaty. Z~tych faktów wynika, że czasem warto zadać sobie trud wyboru metody uwzględniania ograniczeń, a nawet dla tego samego problemu uruchomić kilka symulacji z różnymi metodami.
 
-Kolejnym wnioskiem jest to, że powtórna generacja daje lepsze rezultaty od rzutowania w algorytmie CMA-ES. Należy jednak pamiętać, że powtórna generacja jest bardziej czasochłonne ze względu na konieczność ponownego losowania punktów. Może to być uciążliwe, gdy zależy na szybkości działania, a parametry początkowe sprawiają, że często losowane są punkty niedopuszczalne.
+Kolejnym wnioskiem jest to, że powtórna generacja daje lepsze rezultaty od rzutowania w algorytmie CMA-ES. Należy jednak pamiętać, że powtórna generacja jest bardziej czasochłonna ze względu na konieczność ponownego losowania punktów. Może to być uciążliwe, gdy zależy na szybkości działania, a parametry początkowe sprawiają, że często losowane są punkty niedopuszczalne.
 
 \subsection{Możliwości rozwoju}
 \hspace{3,4ex}Przedstawione rozważania mogą posłużyć jako baza do stworzenia nowych wersji algorytmu CMA-ES. Nowy algorytm mógłby w zależności od aktualnych parametrów (położenie wartości oczekiwanej rozkładu, długość kroku, itp.) dobierać odpowiednią metodę uwzględniania ograniczeń.
